@@ -16,16 +16,9 @@
 -->
 <resources>
 
-    <!-- Network traffic monitor single-line text size -->
-    <dimen name="net_traffic_single_text_size">12dp</dimen>
-
-    <!-- Network traffic monitor multi-line text size -->
-    <dimen name="net_traffic_multi_text_size">7dp</dimen>
-
     <!-- App circle sidebar -->
-    <dimen name="app_sidebar_trigger_width">12dip</dimen>
-    <dimen name="app_sidebar_listview_width">160dp</dimen>
-    <dimen name="app_sidebar_icon_width">72dp</dimen>
-    <dimen name="app_sidebar_icon_height">72dp</dimen>
+    <string name="app_float_maximize_item_title">Maximize</string>
+    <string name="app_float_item_title">Float view</string>
+    <string name="app_stop_item_title">Kill app</string>
 
 </resources>

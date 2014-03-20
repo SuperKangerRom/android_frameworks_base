@@ -788,6 +788,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         mAssistManager = new AssistManager(this, context);
         addGestureAnywhereView();
+        addAppCircleSidebar();
 
         // figure out which pixel-format to use for the status bar.
         mPixelFormat = PixelFormat.OPAQUE;
