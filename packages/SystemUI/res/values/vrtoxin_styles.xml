@@ -20,6 +20,13 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <style name="TextAppearance.StatusBar.Traffic" parent="@*android:style/TextAppearance.StatusBar.Icon">
+        <!-- Note: must be dp to fit in status bar -->
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/status_bar_traffic_color</item>
+    </style>
+
     <!-- App Circle sidebar -->
     <style name="ListTheme" parent="@*android:style/Theme.Holo">
         <item name="android:windowBackground">@*android:color/transparent</item>
@@ -30,6 +37,19 @@
         <item name="android:clipChildren">false</item>
         <item name="android:overScrollMode">never</item>
         <item name="android:divider">@null</item>
+    </style>
+
+    <!-- App side bar -->
+    <style name="AppSidebarItemText" >
+        <item name="android:textColor">@color/sidebar_item_text_color</item>
+        <item name="android:textSize">@dimen/item_title_text_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@color/sidebar_item_text_shadow_color</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:shadowDx">2.0</item>
+        <item name="android:shadowDy">2.0</item>
     </style>
 
 </resources>
