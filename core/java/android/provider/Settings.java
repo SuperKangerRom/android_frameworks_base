@@ -3311,6 +3311,13 @@ public final class Settings {
         public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
 
         /**
+         * Check the proximity sensor during wakeup
+         * @hide
+         */
+        public static final String PROXIMITY_ON_WAKE = "proximity_on_wake";
+
+
+        /**
          * Whether to play sounds when the keyguard is shown and dismissed.
          * @hide
          */
