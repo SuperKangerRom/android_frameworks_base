@@ -3517,6 +3517,12 @@ public final class Settings {
          */
         public static final String STATUS_BAR_CARRIER_LABEL_FONT_SIZE = "status_bar_carrier_label_font_size";
 
+        /**
+         * Enable/Disable screenshot sound
+         * @hide
+         */
+        public static final String SCREENSHOT_SOUND = "screenshot_sound";
+
         // VRToxin end
 
         /**
