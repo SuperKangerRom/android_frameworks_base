@@ -7657,6 +7657,12 @@ public final class Settings {
         public static final String PROTECTED_COMPONENTS = "protected_components";
 
         /**
+         * Whether newly installed apps should run with privacy guard by default
+         * @hide
+         */
+        public static final String PRIVACY_GUARD_DEFAULT = "privacy_guard_default";
+
+        /**
          * Controls whether double tap to wake is enabled.
          * @hide
          */
@@ -7752,6 +7758,7 @@ public final class Settings {
             MOUNT_UMS_NOTIFY_ENABLED,
             SLEEP_TIMEOUT,
             DOUBLE_TAP_TO_WAKE,
+            PRIVACY_GUARD_DEFAULT
         };
 
         /**
