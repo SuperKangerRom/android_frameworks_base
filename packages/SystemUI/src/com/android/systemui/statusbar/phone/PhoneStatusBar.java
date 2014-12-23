@@ -706,6 +706,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mClockLocation = Settings.System.getInt(
                     resolver, Settings.System.STATUS_BAR_CLOCK, Clock.STYLE_CLOCK_RIGHT);
             updateClockView();
+
+            if (mNavigationBarView != null) {
+                boolean navLeftInLandscape = Settings.System.getInt(resolver,
+                        Settings.System.NAVBAR_LEFT_IN_LANDSCAPE, 0) == 1;
+                mNavigationBarView.setLeftInLandscape(navLeftInLandscape);
+            }
         }
     }
 
