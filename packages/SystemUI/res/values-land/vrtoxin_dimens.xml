@@ -24,4 +24,11 @@
     <!-- Default value how much apps show the app screenshot on recents view entry -->
     <integer name="expanded_items_default">1</integer>
 
+    <!-- Floating action button -->
+    <dimen name="floating_action_button_height">54dp</dimen>
+    <dimen name="floating_action_button_width">54dp</dimen>
+    <dimen name="floating_action_button_translation_z">12dp</dimen>
+    <dimen name="floating_action_button_margin_side">78dp</dimen>
+    <dimen name="floating_action_button_margin_bottom">42dp</dimen>
+
 </resources>
