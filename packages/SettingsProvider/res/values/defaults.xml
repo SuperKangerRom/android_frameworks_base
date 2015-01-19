@@ -232,4 +232,6 @@
          2. Left -->
     <integer name="def_qs_quick_pulldown">1</integer>
 
+    <!-- Default protected sms originating address values of Settings.Secure.PROTECTED_SMS_ADDRESSES -->
+    <string-array name="def_protected_sms_list_values"></string-array>
 </resources>
