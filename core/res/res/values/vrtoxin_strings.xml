@@ -47,6 +47,8 @@
 
     <string name="silent_mode_priority">Priority</string>
     <string name="silent_mode_none">None</string>
+    <!-- label for current user in phone options dialog -->
+    <string name="global_action_current_user">Current</string>
 
     <!-- Slimseekbar -->
     <string name="default_string">Default</string>

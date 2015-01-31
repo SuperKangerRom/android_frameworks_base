@@ -67,6 +67,8 @@
   <java-symbol type="color" name="global_actions_icon_color_enabled_selected" />
   <java-symbol type="color" name="global_actions_ripple_color" />
   <java-symbol type="color" name="global_actions_text_color" />
+  <java-symbol type="string" name="global_action_current_user" />
+  <java-symbol type="dimen" name="global_actions_avatar_size" />
 
   <!-- VRToxin Theme -->
   <java-symbol type="style" name="Theme.Material.Dialog.VRToxin" />
