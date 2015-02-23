@@ -24,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -54,7 +55,6 @@ import com.android.systemui.DejankUtils;
 import com.android.systemui.EventLogConstants;
 import com.android.systemui.EventLogTags;
 import com.android.systemui.R;
-import com.android.systemui.vrtoxin.UserContentObserver;
 import com.android.systemui.qs.QSContainer;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
@@ -84,7 +84,6 @@ public class NotificationPanelView extends PanelView implements
 
     private static final float HEADER_RUBBERBAND_FACTOR = 2.05f;
     private static final float LOCK_ICON_ACTIVE_SCALE = 1.2f;
-    private static final float QUICK_PULLDOWN_REGION_FRACTION = 0.2f;
 
     private static final String COUNTER_PANEL_OPEN = "panel_open";
     private static final String COUNTER_PANEL_OPEN_QS = "panel_open_qs";
@@ -220,7 +219,7 @@ public class NotificationPanelView extends PanelView implements
 
     private Handler mHandler = new Handler();
     private SettingsObserver mSettingsObserver;
-    private int mOneFingerQuickSettingsIntercept;
+    private boolean mOneFingerQuickSettingsIntercept;
 
     private Runnable mHeadsUpExistenceChangedRunnable = new Runnable() {
         @Override
@@ -830,16 +829,10 @@ public class NotificationPanelView extends PanelView implements
 
         final float w = getMeasuredWidth();
         final float x = event.getX();
-        float region = (w * QUICK_PULLDOWN_REGION_FRACTION);
-        boolean showQsOverride = false;
-        switch (mOneFingerQuickSettingsIntercept) {
-            case 1: // Right side pulldown
-                showQsOverride = isLayoutRtl() ? (x < region) : (w - region < x);
-                break;
-            case 2: // Left side pulldown
-                showQsOverride = isLayoutRtl() ? (w - region < x) : (x < region);
-                break;
-        }
+        float region = (w * (1.f/4.f)); // TODO overlay region fraction?
+        final boolean showQsOverride = mOneFingerQuickSettingsIntercept &&
+                isLayoutRtl() ? (x < region) : (w - region < x)
+                && mStatusBarState == StatusBarState.SHADE;
 
         return twoFingerDrag || showQsOverride || stylusButtonClickDrag || mouseButtonClickDrag;
     }
@@ -2416,14 +2409,12 @@ public class NotificationPanelView extends PanelView implements
         return mHeadsUpManager.hasPinnedHeadsUp() || mHeadsUpAnimatingAway;
     }
 
-    private class SettingsObserver extends UserContentObserver {
+    class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
         }
 
-        @Override
-        protected void observe() {
-            super.observe();
+        void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
@@ -2432,17 +2423,25 @@ public class NotificationPanelView extends PanelView implements
                     Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QS_QUICK_PULLDOWN), false, this, UserHandle.USER_ALL);
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN), false, this);
+            update();
+        }
+
+        void unobserve() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
             update();
         }
 
         @Override
-        protected void unobserve() {
-            super.unobserve();
-            mContext.getContentResolver().unregisterContentObserver(this);
+        public void onChange(boolean selfChange, Uri uri) {
+            update();
         }
 
-        @Override
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
             mDoubleTapToSleepEnabled = Settings.System.getIntForUser(
@@ -2451,8 +2450,8 @@ public class NotificationPanelView extends PanelView implements
             mDoubleTapToSleepAnywhere = Settings.System.getIntForUser(
                     resolver, Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE, 0,
                     UserHandle.USER_CURRENT) == 1;
-            mOneFingerQuickSettingsIntercept = Settings.System.getIntForUser(resolver,
-                    Settings.System.QS_QUICK_PULLDOWN, 0, UserHandle.USER_CURRENT);
+            mOneFingerQuickSettingsIntercept = Settings.System.getInt(
+                    resolver, Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN, 1) == 1;
         }
     }
 }
