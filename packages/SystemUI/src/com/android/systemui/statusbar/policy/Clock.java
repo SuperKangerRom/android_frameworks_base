@@ -22,7 +22,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
@@ -36,12 +35,16 @@ import android.widget.TextView;
 
 import com.android.systemui.DemoMode;
 import com.android.systemui.R;
+import com.android.systemui.vrtoxin.UserContentObserver;
 
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import libcore.icu.LocaleData;
 
@@ -78,13 +81,15 @@ public class Clock implements DemoMode {
     private SimpleDateFormat mClockFormat;
     private SettingsObserver settingsObserver;
 
+    protected boolean mShowClockSeconds = false;
+
     private int mAmPmStyle = AM_PM_STYLE_GONE;
     private int mClockDateDisplay = CLOCK_DATE_DISPLAY_GONE;
     private int mClockDateStyle = CLOCK_DATE_STYLE_REGULAR;
     private boolean mDemoMode;
     private boolean mAttached;
 
-    class SettingsObserver extends ContentObserver {
+    class SettingsObserver extends UserContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
         }
@@ -103,6 +108,8 @@ public class Clock implements DemoMode {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_DATE_STYLE), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.CLOCK_USE_SECOND), false, settingsObserver);
             updateSettings();
         }
 
@@ -115,6 +122,9 @@ public class Clock implements DemoMode {
             updateSettings();
         }
     }
+
+    private final Handler handler = new Handler();
+    TimerTask second;
 
     public Clock(Context context, TextView v) {
         mContext = context;
@@ -216,13 +226,19 @@ public class Clock implements DemoMode {
         }
         String result = sdf.format(mCalendar.getTime());
 
+        mShowClockSeconds = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.CLOCK_USE_SECOND, 0) == 1;
+        if (mShowClockSeconds) {
+            String temp = result;
+            result = String.format("%s:%02d", temp, new GregorianCalendar().get(Calendar.SECOND));
+        }
+
         CharSequence dateString = null;
         if (mClockDateDisplay != CLOCK_DATE_DISPLAY_GONE) {
             Date now = new Date();
 
             String clockDateFormat = Settings.System.getString(mContext.getContentResolver(),
                     Settings.System.STATUS_BAR_DATE_FORMAT);
-
             if (clockDateFormat == null || clockDateFormat.isEmpty()) {
                 // Set dateString to short uppercase Weekday (Default for AOKP) if empty
                 dateString = DateFormat.format("EEE", now) + " ";
@@ -337,6 +353,27 @@ public class Clock implements DemoMode {
         mClockDateStyle = Settings.System.getIntForUser(resolver,
                 Settings.System.STATUS_BAR_DATE_STYLE, CLOCK_DATE_STYLE_REGULAR,
                 UserHandle.USER_CURRENT);
+        mShowClockSeconds = Settings.System.getIntForUser(resolver,
+                Settings.System.CLOCK_USE_SECOND, 0,
+                UserHandle.USER_CURRENT) == 1;
+
+        if (mShowClockSeconds) {
+            second = new TimerTask()
+            {
+                @Override
+                public void run() {
+                    Runnable updater = new Runnable()
+                        {
+                            public void run() {
+                                updateClock();
+                            }
+                        };
+                    handler.post(updater);
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(second, 0, 1001);
+        }
         updateClock();
     }
 
