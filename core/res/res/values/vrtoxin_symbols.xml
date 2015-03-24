@@ -93,4 +93,7 @@
   <java-symbol type="anim" name="slide_in_left_no_fade" />
   <java-symbol type="anim" name="slide_out_right_no_fade" />
 
+  <!-- Doze: accelerometer -->
+  <java-symbol type="bool" name="config_dozeUseAccelerometer" />
+
 </resources>
