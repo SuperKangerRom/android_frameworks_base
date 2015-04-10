@@ -846,6 +846,14 @@ public abstract class PackageManager {
     public static final int DELETE_ALL_USERS = 0x00000002;
 
     /**
+     * Used for prebundles
+     * Installation failed for a prebundled app because the user previously uninstalled it
+     * and we don't want to bring it back
+     * @hide
+     */
+    public static final int INSTALL_FAILED_UNINSTALLED_PREBUNDLE = -403;
+
+    /**
      * Flag parameter for {@link #deletePackage} to indicate that, if you are calling
      * uninstall on a system that has been updated, then don't do the normal process
      * of uninstalling the update and rolling back to the older system version (which
