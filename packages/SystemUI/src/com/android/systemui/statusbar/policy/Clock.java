@@ -32,6 +32,7 @@ import android.text.format.DateFormat;
 import android.text.style.CharacterStyle;
 import android.text.style.RelativeSizeSpan;
 import android.widget.TextView;
+import android.view.View;
 
 import com.android.systemui.DemoMode;
 import com.android.systemui.R;
@@ -110,6 +111,9 @@ public class Clock implements DemoMode {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.CLOCK_USE_SECOND), false, settingsObserver);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUSBAR_CLOCK_COLOR), false, this,
+                    UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -357,6 +361,15 @@ public class Clock implements DemoMode {
                 Settings.System.CLOCK_USE_SECOND, 0,
                 UserHandle.USER_CURRENT) == 1;
 
+        int defaultColor = mContext.getResources().getColor(R.color.status_bar_clock_color);
+        int clockColor = Settings.System.getIntForUser(resolver,
+                Settings.System.STATUSBAR_CLOCK_COLOR, defaultColor,
+                UserHandle.USER_CURRENT);
+        if (clockColor == Integer.MIN_VALUE) {
+            // flag to reset the color
+            clockColor = defaultColor;
+        }
+
         if (mShowClockSeconds) {
             second = new TimerTask()
             {
@@ -374,6 +387,8 @@ public class Clock implements DemoMode {
             Timer timer = new Timer();
             timer.schedule(second, 0, 1001);
         }
+
+        mClockView.setTextColor(clockColor);
         updateClock();
     }
 
