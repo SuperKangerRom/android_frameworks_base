@@ -68,8 +68,26 @@
     <!-- Error message if user want to try to disable all navigation options -->
     <string name="disable_navigation_pie_error">You cannot disable the navigation bar. No other navigation is enabled. Enable first pie controls to turn off the navigation bar.</string>
 
+    <!-- status message in phone options dialog for when AppCircleBar is on -->
+    <string name="global_actions_appcirclebar_mode_on_status">AppCircleBar is ON</string>
+    <!-- status message in phone options dialog for when AppCircleBar is off -->
+    <string name="global_actions_appcirclebar_mode_off_status">AppCircleBar is OFF</string>
+
+    <!-- status message in phone options dialog for when AppSideBar is on -->
+    <string name="global_actions_appsidebar_mode_on_status">AppSideBar is ON</string>
+    <!-- status message in phone options dialog for when AppSideBar is off -->
+    <string name="global_actions_appsidebar_mode_off_status">AppSideBar is OFF</string>
+
+    <!-- status message in phone options dialog for when pie is on -->
+    <string name="global_actions_gesture_anywhere_mode_on_status">Gesture Anywhere is ON</string>
+    <!-- status message in phone options dialog for when pie is off -->
+    <string name="global_actions_gesture_anywhere_mode_off_status">Gesture Anywhere is OFF</string>
+
     <string name="global_actions_toggle_pie_mode">Pie control</string>
     <string name="global_actions_toggle_nav_bar">Navigation bar</string>
+    <string name="global_actions_toggle_appcirclebar_mode">AppCircleBar</string>
+    <string name="global_actions_toggle_appsidebar_mode">AppSideBar</string>
+    <string name="global_actions_toggle_gesture_anywhere_mode">Gesture Anywhere</string>
 
     <!-- Slimseekbar -->
     <string name="default_string">Default</string>

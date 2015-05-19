@@ -170,18 +170,18 @@ public class Action {
                 return;
             } else if (action.equals(ActionConstants.ACTION_PIE)) {
                 boolean pieState = isPieEnabled(context);
-/*                if (pieState && !isNavBarEnabled(context) && isNavBarDefault(context)) {
+                if (pieState && !isNavBarEnabled(context) && isNavBarDefault(context)) {
                     Toast.makeText(context,
                             com.android.internal.R.string.disable_pie_navigation_error,
                             Toast.LENGTH_LONG).show();
                     return;
-                }*/
+                }
                 Settings.System.putIntForUser(
                         context.getContentResolver(),
                         Settings.System.PIE_CONTROLS,
                         pieState ? 0 : 1, UserHandle.USER_CURRENT);
                 return;
-/*            } else if (action.equals(ActionConstants.ACTION_NAVBAR)) {
+            } else if (action.equals(ActionConstants.ACTION_NAVBAR)) {
                 boolean navBarState = isNavBarEnabled(context);
                 if (navBarState && !isPieEnabled(context) && isNavBarDefault(context)) {
                     Toast.makeText(context,
@@ -194,7 +194,6 @@ public class Action {
                         Settings.System.NAVIGATION_BAR_SHOW,
                         navBarState ? 0 : 1, UserHandle.USER_CURRENT);
                 return;
-*/
             } else if (action.equals(ActionConstants.ACTION_VOICE_SEARCH)) {
                 // launch the search activity
                 Intent intent = new Intent(Intent.ACTION_SEARCH_LONG_PRESS);
@@ -379,7 +378,7 @@ public class Action {
                 Settings.System.PIE_CONTROLS,
                 0, UserHandle.USER_CURRENT) == 1;
     }
-/*
+
     public static boolean isNavBarEnabled(Context context) {
         return Settings.System.getIntForUser(context.getContentResolver(),
                 Settings.System.NAVIGATION_BAR_SHOW,
@@ -390,7 +389,7 @@ public class Action {
         return context.getResources().getBoolean(
                 com.android.internal.R.bool.config_showNavigationBar);
     }
-*/
+
     public static boolean isActionKeyEvent(String action) {
         if (action.equals(ActionConstants.ACTION_HOME)
                 || action.equals(ActionConstants.ACTION_BACK)

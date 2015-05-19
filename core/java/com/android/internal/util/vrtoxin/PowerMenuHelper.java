@@ -104,6 +104,18 @@ public class PowerMenuHelper {
         } else if (clickAction.equals(PowerMenuConstants.ACTION_PIE)) {
             return res.getDrawable(
                 com.android.internal.R.drawable.ic_lock_pie);
+        } else if (clickAction.equals(PowerMenuConstants.ACTION_NAVBAR)) {
+            return context.getResources().getDrawable(
+                com.android.internal.R.drawable.ic_lock_navbar);
+        } else if (clickAction.equals(PowerMenuConstants.ACTION_APP_CIRCLE_BAR)) {
+            return res.getDrawable(
+                com.android.internal.R.drawable.ic_lock_appcirclebar);
+        } else if (clickAction.equals(PowerMenuConstants.ACTION_APP_SIDEBAR)) {
+            return res.getDrawable(
+                com.android.internal.R.drawable.ic_lock_appsidebar);
+        } else if (clickAction.equals(PowerMenuConstants.ACTION_GESTURE_ANYWHERE)) {
+            return res.getDrawable(
+                com.android.internal.R.drawable.ic_lock_gestures);
         }
         return null;
     }

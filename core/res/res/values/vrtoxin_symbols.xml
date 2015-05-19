@@ -84,6 +84,24 @@
   <java-symbol type="drawable" name="ic_lock_navbar" />
   <java-symbol type="string" name="disable_navigation_pie_error" />
 
+  <!-- AppCircleBar controls -->
+  <java-symbol type="string" name="global_actions_toggle_appcirclebar_mode" />
+  <java-symbol type="string" name="global_actions_appcirclebar_mode_on_status" />
+  <java-symbol type="string" name="global_actions_appcirclebar_mode_off_status" />
+  <java-symbol type="drawable" name="ic_lock_appcirclebar" />
+
+  <!-- AppSideBar controls -->
+  <java-symbol type="string" name="global_actions_toggle_appsidebar_mode" />
+  <java-symbol type="string" name="global_actions_appsidebar_mode_on_status" />
+  <java-symbol type="string" name="global_actions_appsidebar_mode_off_status" />
+  <java-symbol type="drawable" name="ic_lock_appsidebar" />
+
+  <!-- Gesture Anywhere controls -->
+  <java-symbol type="string" name="global_actions_toggle_gesture_anywhere_mode" />
+  <java-symbol type="string" name="global_actions_gesture_anywhere_mode_on_status" />
+  <java-symbol type="string" name="global_actions_gesture_anywhere_mode_off_status" />
+  <java-symbol type="drawable" name="ic_lock_gestures" />
+
   <!-- VRToxin Theme -->
   <java-symbol type="style" name="Theme.Material.Dialog.VRToxin" />
   <java-symbol type="style" name="Theme.Material.Dialog.Alert.VRToxin" />

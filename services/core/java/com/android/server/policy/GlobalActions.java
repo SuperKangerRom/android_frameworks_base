@@ -127,6 +127,10 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private ToggleAction mAirplaneModeOn;
     private ToggleAction mExpandedDesktopModeOn;
     private ToggleAction mPieModeOn;
+    private ToggleAction mNavBarModeOn;
+    private ToggleAction mAppCircleBarModeOn;
+    private ToggleAction mAppSideBarModeOn;
+    private ToggleAction mGestureAnywhereModeOn;
 
     private MyAdapter mAdapter;
 
@@ -135,6 +139,10 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private ToggleAction.State mAirplaneState = ToggleAction.State.Off;
     private ToggleAction.State mExpandedDesktopState = ToggleAction.State.Off;
     private ToggleAction.State mPieState = ToggleAction.State.Off;
+    private ToggleAction.State mNavBarState = ToggleAction.State.Off;
+    private ToggleAction.State mAppCircleBarState = ToggleAction.State.Off;
+    private ToggleAction.State mAppSideBarState = ToggleAction.State.Off;
+    private ToggleAction.State mGestureAnywhereState = ToggleAction.State.Off;
     private boolean mIsWaitingForEcmExit = false;
     private boolean mHasTelephony;
     private boolean mHasVibrator;
@@ -307,6 +315,18 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_PIE)) {
                 constructPieToggle();
                 mItems.add(mPieModeOn);
+            } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_NAVBAR)) {
+                constructNavBarToggle();
+                mItems.add(mNavBarModeOn);
+            } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_APP_CIRCLE_BAR)) {
+                constructAppCircleBarToggle();
+                mItems.add(mAppCircleBarModeOn);
+            } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_APP_SIDEBAR)) {
+                constructAppSideBarToggle();
+                mItems.add(mAppSideBarModeOn);
+            } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_GESTURE_ANYWHERE)) {
+                constructGestureAnywhereToggle();
+                mItems.add(mGestureAnywhereModeOn);
             } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_SCREENSHOT)) {
                 mItems.add(getScreenshotAction());
             } else if (config.getClickAction().equals(PowerMenuConstants.ACTION_SOUND) && mShowSilentToggle) {
@@ -645,6 +665,102 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         onPieModeChanged();
     }
 
+    private void constructNavBarToggle() {
+        mNavBarModeOn = new ToggleAction(
+                R.drawable.ic_lock_navbar,
+                R.drawable.ic_lock_navbar,
+                R.string.global_actions_toggle_nav_bar,
+                R.string.global_actions_nav_bar_mode_on_status,
+                R.string.global_actions_nav_bar_mode_off_status) {
+
+            void onToggle(boolean on) {
+                com.android.internal.util.vrtoxin.Action.processAction(
+                    mContext, PowerMenuConstants.ACTION_NAVBAR, false);
+            }
+
+            public boolean showDuringKeyguard() {
+                return true;
+            }
+
+            public boolean showBeforeProvisioning() {
+                return false;
+            }
+        };
+        onNavBarModeChanged();
+    }
+
+    private void constructAppCircleBarToggle() {
+        mAppCircleBarModeOn = new ToggleAction(
+                R.drawable.ic_lock_appcirclebar,
+                R.drawable.ic_lock_appcirclebar,
+                R.string.global_actions_toggle_appcirclebar_mode,
+                R.string.global_actions_appcirclebar_mode_on_status,
+                R.string.global_actions_appcirclebar_mode_off_status) {
+
+            void onToggle(boolean on) {
+                com.android.internal.util.vrtoxin.Action.processAction(
+                    mContext, PowerMenuConstants.ACTION_APP_CIRCLE_BAR, false);
+            }
+
+            public boolean showDuringKeyguard() {
+                return true;
+            }
+
+            public boolean showBeforeProvisioning() {
+                return false;
+            }
+        };
+        onAppCircleBarModeChanged();
+    }
+
+    private void constructAppSideBarToggle() {
+        mAppSideBarModeOn = new ToggleAction(
+                R.drawable.ic_lock_appsidebar,
+                R.drawable.ic_lock_appsidebar,
+                R.string.global_actions_toggle_appsidebar_mode,
+                R.string.global_actions_appsidebar_mode_on_status,
+                R.string.global_actions_appsidebar_mode_off_status) {
+
+            void onToggle(boolean on) {
+                com.android.internal.util.vrtoxin.Action.processAction(
+                    mContext, PowerMenuConstants.ACTION_APP_SIDEBAR, false);
+            }
+
+            public boolean showDuringKeyguard() {
+                return true;
+            }
+
+            public boolean showBeforeProvisioning() {
+                return false;
+            }
+        };
+        onAppSideBarModeChanged();
+    }
+
+    private void constructGestureAnywhereToggle() {
+        mGestureAnywhereModeOn = new ToggleAction(
+                R.drawable.ic_lock_gestures,
+                R.drawable.ic_lock_gestures,
+                R.string.global_actions_toggle_gesture_anywhere_mode,
+                R.string.global_actions_gesture_anywhere_mode_on_status,
+                R.string.global_actions_gesture_anywhere_mode_off_status) {
+
+            void onToggle(boolean on) {
+                com.android.internal.util.vrtoxin.Action.processAction(
+                    mContext, PowerMenuConstants.ACTION_GESTURE_ANYWHERE, false);
+            }
+
+            public boolean showDuringKeyguard() {
+                return true;
+            }
+
+            public boolean showBeforeProvisioning() {
+                return false;
+            }
+        };
+        onGestureAnywhereModeChanged();
+    }
+
     private Action getScreenshotAction() {
         return new SinglePressAction(com.android.internal.R.drawable.ic_lock_screenshot,
                 R.string.global_action_screenshot) {
@@ -756,6 +872,18 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
         if (mPieModeOn != null) {
             mPieModeOn.updateState(mPieState);
+        }
+        if (mNavBarModeOn != null) {
+            mNavBarModeOn.updateState(mNavBarState);
+        }
+        if (mAppCircleBarModeOn != null) {
+            mAppCircleBarModeOn.updateState(mAppCircleBarState);
+        }
+        if (mAppSideBarModeOn != null) {
+            mAppSideBarModeOn.updateState(mAppSideBarState);
+        }
+        if (mGestureAnywhereModeOn != null) {
+            mGestureAnywhereModeOn.updateState(mGestureAnywhereState);
         }
 
         // Start observing setting changes during
@@ -1307,6 +1435,18 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.PIE_CONTROLS), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_SHOW), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ENABLE_APP_CIRCLE_BAR), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.APP_SIDEBAR_ENABLED), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.GESTURE_ANYWHERE_ENABLED), false, this,
+                    UserHandle.USER_ALL);
         }
 
         @Override
@@ -1315,6 +1455,18 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.PIE_CONTROLS))) {
                 onPieModeChanged();
+            } else if (uri.equals(Settings.System.getUriFor(
+                Settings.System.NAVIGATION_BAR_SHOW))) {
+                onNavBarModeChanged();
+            } else if (uri.equals(Settings.System.getUriFor(
+                Settings.System.ENABLE_APP_CIRCLE_BAR))) {
+                onAppCircleBarModeChanged();
+            } else if (uri.equals(Settings.System.getUriFor(
+                Settings.System.APP_SIDEBAR_ENABLED))) {
+                onAppSideBarModeChanged();
+            } else if (uri.equals(Settings.System.getUriFor(
+                Settings.System.GESTURE_ANYWHERE_ENABLED))) {
+                onGestureAnywhereModeChanged();
             }
             mAdapter.notifyDataSetChanged();
         }
@@ -1401,6 +1553,52 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         mPieState = pieModeOn ? ToggleAction.State.On : ToggleAction.State.Off;
         if (mPieModeOn != null) {
             mPieModeOn.updateState(mPieState);
+        }
+    }
+
+    private void onNavBarModeChanged() {
+        boolean defaultValue = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_showNavigationBar);
+        boolean navBarModeOn = Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.NAVIGATION_BAR_SHOW,
+                defaultValue ? 1 : 0, UserHandle.USER_CURRENT) == 1;
+        mNavBarState = navBarModeOn ? ToggleAction.State.On : ToggleAction.State.Off;
+        if (mNavBarModeOn != null) {
+            mNavBarModeOn.updateState(mNavBarState);
+        }
+    }
+
+    private void onAppCircleBarModeChanged() {
+        boolean appCircleBarModeOn = Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.ENABLE_APP_CIRCLE_BAR,
+                0, UserHandle.USER_CURRENT) == 1;
+        mAppCircleBarState = appCircleBarModeOn ? ToggleAction.State.On : ToggleAction.State.Off;
+        if (mAppCircleBarModeOn != null) {
+            mAppCircleBarModeOn.updateState(mAppCircleBarState);
+        }
+    }
+
+    private void onAppSideBarModeChanged() {
+        boolean appSideBarModeOn = Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.APP_SIDEBAR_ENABLED,
+                0, UserHandle.USER_CURRENT) == 1;
+        mAppSideBarState = appSideBarModeOn ? ToggleAction.State.On : ToggleAction.State.Off;
+        if (mAppSideBarModeOn != null) {
+            mAppSideBarModeOn.updateState(mAppSideBarState);
+        }
+    }
+
+    private void onGestureAnywhereModeChanged() {
+        boolean gestureAnywhereModeOn = Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.GESTURE_ANYWHERE_ENABLED,
+                0, UserHandle.USER_CURRENT) == 1;
+        mGestureAnywhereState = gestureAnywhereModeOn ? ToggleAction.State.On : ToggleAction.State.Off;
+        if (mGestureAnywhereModeOn != null) {
+            mGestureAnywhereModeOn.updateState(mGestureAnywhereState);
         }
     }
 

@@ -27,6 +27,10 @@ public class PowerMenuConstants {
     public static final String ACTION_LOCK_DOWN            = "**lock_down**";
     public static final String ACTION_EXPANDED_DESKTOP     = "**expanded_desktop**";
     public static final String ACTION_PIE                  = "**pie**";
+    public static final String ACTION_NAVBAR               = "**nav_bar**";
+    public static final String ACTION_APP_CIRCLE_BAR       = "**appcirclebar**";
+    public static final String ACTION_APP_SIDEBAR          = "**appsidebar**";
+    public static final String ACTION_GESTURE_ANYWHERE     = "**gesture_anywhere**";
     public static final String ACTION_SCREENSHOT           = "**screenshot**";
     public static final String ACTION_SOUND                = "**sound**";
 
