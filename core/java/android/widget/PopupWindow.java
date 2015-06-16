@@ -128,6 +128,8 @@ public class PopupWindow {
 
     private OnTouchListener mTouchInterceptor;
 
+    private boolean mAllowLeftOverdraw;
+
     private int mWidthMode;
     private int mWidth = LayoutParams.WRAP_CONTENT;
     private int mLastWidth;
@@ -719,6 +721,18 @@ public class PopupWindow {
     public void setClipToScreenEnabled(boolean enabled) {
         mClipToScreen = enabled;
         setClippingEnabled(!enabled);
+    }
+
+    /**
+     * Allow the popup window to draw outside the left edge of the container
+     * if mClipToScreen = true.
+     *
+     * @param enabled True to allow outside draw (default = false).
+     * @see #findDropDownPosition
+     * @hide
+     */
+    public void setAllowLeftOverdraw(boolean enabled) {
+        mAllowLeftOverdraw = enabled;
     }
 
     /**
@@ -1464,7 +1478,7 @@ public class PopupWindow {
                 p.x -= right - displayFrameWidth;
             }
 
-            if (p.x < displayFrame.left) {
+            if (p.x < displayFrame.left && !mAllowLeftOverdraw) {
                 p.x = displayFrame.left;
                 p.width = Math.min(p.width, displayFrameWidth);
             }
