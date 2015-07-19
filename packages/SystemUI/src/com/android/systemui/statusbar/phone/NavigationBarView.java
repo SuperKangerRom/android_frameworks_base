@@ -115,6 +115,7 @@ public class NavigationBarView extends LinearLayout {
     private boolean mImeArrowVisibility;
     private boolean mIsImeArrowVisible = false;
 
+    private boolean mIsHandlerCallbackActive = false;
 
     final Display mDisplay;
     View mCurrentView = null;
@@ -240,7 +241,10 @@ public class NavigationBarView extends LinearLayout {
     };
 
     public void onNavButtonTouched() {
-        mHandler.removeCallbacks(mNavButtonDimmer);
+        if (mIsHandlerCallbackActive) {
+            mHandler.removeCallbacks(mNavButtonDimmer);
+            mIsHandlerCallbackActive = false;
+        }
         final boolean keyguardProbablyEnabled =
                 (mDisabledFlags & View.STATUS_BAR_DISABLE_HOME) != 0;
         if (getNavButtons() != null) {
@@ -253,6 +257,7 @@ public class NavigationBarView extends LinearLayout {
             }
             if (mDimNavButtons && !keyguardProbablyEnabled) {
                 mHandler.postDelayed(mNavButtonDimmer, mDimNavButtonsTimeout);
+                mIsHandlerCallbackActive = true;
             }
         }
     }
@@ -1368,6 +1373,7 @@ public class NavigationBarView extends LinearLayout {
     private Runnable mNavButtonDimmer = new Runnable() {
         @Override
         public void run() {
+            mIsHandlerCallbackActive = false;
             if (getNavButtons() != null && mIsDim == false) {
                 mIsDim = true;
                 if (mDimNavButtonsAnimate) {
