@@ -31,6 +31,7 @@ import android.os.UserHandle;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,26 +189,70 @@ public class QSPanel extends ViewGroup {
 
     public void updateResources() {
         final Resources res = mContext.getResources();
-        final int columns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
-        mCellHeight = res.getDimensionPixelSize(R.dimen.qs_tile_height);
-        mCellWidth = (int)(mCellHeight * TILE_ASPECT);
         mLargeCellHeight = res.getDimensionPixelSize(R.dimen.qs_dual_tile_height);
         mLargeCellWidth = (int)(mLargeCellHeight * TILE_ASPECT);
         mPanelPaddingBottom = res.getDimensionPixelSize(R.dimen.qs_panel_padding_bottom);
         mDualTileUnderlap = res.getDimensionPixelSize(R.dimen.qs_dual_tile_padding_vertical);
         mBrightnessPaddingTop = res.getDimensionPixelSize(R.dimen.qs_brightness_padding_top);
-        if (mColumns != columns) {
-            mColumns = columns;
-            postInvalidate();
-        }
         for (TileRecord r : mRecords) {
             r.tile.clearState();
         }
+        updateNumColumns();
         if (mListening) {
             refreshAllTiles();
             mSettingsObserver.observe();
         }
         updateDetailText();
+    }
+
+    public void updateNumColumns() {
+        final Resources res = mContext.getResources();
+        final ContentResolver resolver = mContext.getContentResolver();
+        int defColumns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
+        int columns = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.QS_NUM_TILE_COLUMNS, defColumns,
+                UserHandle.USER_CURRENT);
+        if (mColumns != columns) {
+            mColumns = columns;
+        }
+        float aspect = getAspectForColumnCount(columns, res);
+        mCellHeight = Math.round(res.getDimensionPixelSize(
+                R.dimen.qs_tile_height) * aspect);
+        mCellWidth = Math.round(mCellHeight * (TILE_ASPECT * aspect));
+        for (TileRecord record : mRecords) {
+            record.tileView.updateDimens(res, aspect);
+            record.tileView.recreateLabel();
+            if (record.tileView.getVisibility() != GONE) {
+                record.tileView.requestLayout();
+            }
+        }
+        postInvalidate();
+    }
+
+    private float getAspectForColumnCount(int numColumns, Resources res) {
+        TypedValue tileScaleFactor = new TypedValue();
+        int dimen;
+        switch (numColumns) {
+            case 2:
+                dimen = R.dimen.qs_tile_three_column_scale;
+                break;
+            case 3:
+                dimen = R.dimen.qs_tile_three_column_scale;
+                break;
+            case 4:
+                dimen = R.dimen.qs_tile_four_column_scale;
+                break;
+            case 5:
+                dimen = R.dimen.qs_tile_five_column_scale;
+                break;
+            case 6:
+                dimen = R.dimen.qs_tile_six_column_scale;
+                break;
+            default:
+                dimen = R.dimen.qs_tile_four_column_scale;
+        }
+        res.getValue(dimen, tileScaleFactor, true);
+        return tileScaleFactor.getFloat();
     }
 
     @Override
@@ -709,9 +754,6 @@ public class QSPanel extends ViewGroup {
                     Settings.Secure.QS_SHOW_BRIGHTNESS_SLIDER),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
-                    Settings.Secure.QS_USE_FOUR_COLUMNS),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.QUICK_SETTINGS_TILES_VIBRATE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
@@ -731,9 +773,6 @@ public class QSPanel extends ViewGroup {
             mBrightnessSliderEnabled = Settings.Secure.getIntForUser(
             mContext.getContentResolver(), Settings.Secure.QS_SHOW_BRIGHTNESS_SLIDER,
                 1, UserHandle.USER_CURRENT) == 1;
-            mUseFourColumns = Settings.Secure.getIntForUser(
-            mContext.getContentResolver(), Settings.Secure.QS_USE_FOUR_COLUMNS,
-                0, UserHandle.USER_CURRENT) == 1;
             mVibrationEnabled = Settings.Secure.getIntForUser(
             mContext.getContentResolver(), Settings.Secure.QUICK_SETTINGS_TILES_VIBRATE,
                 0, UserHandle.USER_CURRENT) == 1;
