@@ -266,8 +266,8 @@ public class Clock implements DemoMode {
         mShowClockSeconds = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.CLOCK_USE_SECOND, 0) == 1;
         if (mShowClockSeconds) {
-            String temp = result;
-            result = String.format("%s:%02d", temp, new GregorianCalendar().get(Calendar.SECOND));
+            String temp = timeResult;
+            timeResult = String.format("%s:%02d", temp, new GregorianCalendar().get(Calendar.SECOND));
         }
 
         CharSequence dateString = null;
