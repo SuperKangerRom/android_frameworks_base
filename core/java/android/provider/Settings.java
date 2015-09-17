@@ -3511,6 +3511,12 @@ public final class Settings {
          */
         public static final String STATUS_BAR_CARRIER_LABEL_COLOR = "status_bar_carrier_label_color";
 
+        /**
+         * Settings for carrier label font size
+         * @hide
+         */
+        public static final String STATUS_BAR_CARRIER_LABEL_FONT_SIZE = "status_bar_carrier_label_font_size";
+
         // VRToxin end
 
         /**
