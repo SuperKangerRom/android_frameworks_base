@@ -5072,6 +5072,24 @@ public final class Settings {
         public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
 
         /**
+         *  Color of the memory bar
+         * @hide
+         */
+        public static final String MEMORY_BAR_COLOR = "memory_bar_color";
+
+        /**
+         *  Color of the used portion of the memory bar
+         * @hide
+         */
+        public static final String MEMORY_BAR_USED_COLOR = "memory_bar_used_color";
+
+        /**
+         * text color for recents membar
+         *  @hide
+         */
+        public static final String MEM_TEXT_COLOR = "mem_text_color";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
