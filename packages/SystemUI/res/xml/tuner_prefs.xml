@@ -25,6 +25,11 @@
             android:summary="@string/double_tap_to_sleep_summary"
             android:defaultValue="true" />
 
+        <com.android.settings.vrtoxin.SystemSettingSwitchPreference
+            android:key="double_tap_sleep_anywhere"
+            android:title="@string/double_tap_sleep_anywhere_title"
+            android:summary="@string/double_tap_sleep_anywhere_summary" />
+
     <Preference
         android:key="qs_tuner"
         android:title="@string/quick_settings" />
