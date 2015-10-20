@@ -3375,6 +3375,20 @@ public final class Settings {
             }
         };
 
+        // VRToxin start
+
+        /**
+         * Colors used for the color picker panel puttons
+         * 0: VRToxin colors
+         * 1: Material colors
+         * 2: RGB colors
+         * default: 0
+         * @hide
+         */
+        public static final String COLOR_PICKER_PALETTE = "color_picker_palette";
+
+        // VRToxin end
+
         /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
