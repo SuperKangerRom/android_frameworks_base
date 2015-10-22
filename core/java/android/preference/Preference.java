@@ -1384,14 +1384,6 @@ public class Preference implements Comparable<Preference> {
     protected boolean isPersisted() {
         return getSharedPreferences().contains(mKey);
     }
-    
-    /**
-     * Returns whether the preference can be found in persistent storage
-     * @hide
-     */
-    protected boolean isPersisted() {
-        return getSharedPreferences().contains(mKey);
-    }
 
     private void dispatchSetInitialValue() {
         // By now, we know if we are persistent.
