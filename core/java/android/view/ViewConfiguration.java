@@ -250,6 +250,8 @@ public class ViewConfiguration {
     private static final int HAS_PERMANENT_MENU_KEY_TRUE = 1;
     private static final int HAS_PERMANENT_MENU_KEY_FALSE = 2;
 
+    private Context mContext;
+
     private final int mEdgeSlop;
     private final int mFadingEdgeLength;
     private final int mMinimumFlingVelocity;
