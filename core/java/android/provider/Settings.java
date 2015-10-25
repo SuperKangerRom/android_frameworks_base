@@ -3576,6 +3576,60 @@ public final class Settings {
         public static final String RECENTS_SHOW_SEARCH_BAR = "recents_show_search_bar";
 
         /**
+         * Status bar weather temperature
+         * 0: Hide the temperature
+         * 1: Display the temperature with scale
+         * 2: Display the temperature without scale
+         * @hide
+         */
+        public static final String STATUS_BAR_SHOW_WEATHER_TEMP = "status_bar_show_weather_temp";
+
+        /**
+         * Style of Weather Temp
+         * 0 - Right (default)
+         * 1 - Left
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_TEMP_STYLE = "status_bar_weather_temp_style";
+
+        /**
+         * Statusbar weather font style setting
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_FONT_STYLE = "status_bar_weather_font_style";
+
+        /**
+         * Statusbar weather font size setting
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_SIZE = "status_bar_weather_size";
+
+        /**
+         * Statusbar weather color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_COLOR = "status_bar_weather_color";
+
+        /**
+         * Wether to hide the weather temp on the status bar when the custom number of notifications is reached
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_HIDE_WEATHER = "status_bar_weather_hide_weather";
+
+        /**
+         * Hide the Weather temp on the status bar when the notification icons will reach this number
+         * 1: 1 notification icon (always)
+         * 2: 2 notification icons
+         * 3: 3 notification icons
+         * 4: 4 notification icons
+         * 5: 5 notification icons
+         * 6: 6 notification icons
+         * default: 1
+         * @hide
+         */
+        public static final String STATUS_BAR_WEATHER_NUMBER_OF_NOTIFICATION_ICONS = "status_bar_weather_number_of_notification_icons";
+
+        /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
          * it to PRIVATE_SETTINGS below. Also add a validator that can validate
