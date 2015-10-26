@@ -3020,6 +3020,37 @@ public final class Settings {
         public static final String USE_EDGE_SERVICE_FOR_GESTURES = "edge_service_for_gestures";
 
         /**
+         * Buttons in the power menu
+         *
+         * @hide
+         */
+        public static final String POWER_MENU_BUTTONS = "power_menu_buttons";
+
+        /**
+         * Color of the icons on the lock screen (normal state)
+         * @hide
+         */
+        public static final String POWER_MENU_ICON_NORMAL_COLOR = "power_menu_icon_normal_color";
+
+        /**
+         * Color of the icons on the lock screen (enabled/selected state)
+         * @hide
+         */
+        public static final String POWER_MENU_ICON_ENABLED_SELECTED_COLOR = "power_menu_icon_enabled_selected_color";
+
+        /**
+         * Lockscreen buttons bar ripple color
+         * @hide
+         */
+        public static final String POWER_MENU_RIPPLE_COLOR = "power_menu_ripple_color";
+
+        /**
+         * Color of the text on the lock screen
+         * @hide
+         */
+        public static final String POWER_MENU_TEXT_COLOR = "power_menu_text_color";
+
+        /**
          * Control the type of rotation which can be performed using the accelerometer
          * if ACCELEROMETER_ROTATION is enabled.
          * Value is a bitwise combination of
@@ -4369,6 +4400,15 @@ public final class Settings {
          * @hide
          */
         public static final String T9_SEARCH_INPUT_LOCALE = "t9_search_input_locale";
+
+        // DarkKat additions start
+
+        /**
+         * Whether to include options in power menu for 
+         * quick rebooting, rebooting into recovery and rebooting into bootloader
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

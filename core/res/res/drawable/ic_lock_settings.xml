@@ -13,17 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <style name="Theme.Material.Dialog.Dark" parent="Theme.Material.BaseDialog">
-        <item name="colorBackground">@drawable/material_bg_blue_grey</item>
-        <item name="windowBackground">@drawable/dialog_background_material</item>
-        <item name="colorControlActivated">@color/accent_material_light</item>
-    </style>
-
-    <style name="Theme.Material.Dialog.Alert.Dark" parent="Theme.Material.Dialog.BaseAlert">
-        <item name="colorBackground">@drawable/material_bg_blue_grey</item>
-        <item name="colorAccent">@color/accent_material_light</item>
-    </style>
-
-</resources>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/ic_lock_settings_alpha"
+    android:tint="@*android:color/global_actions_icon_color_normal" />
