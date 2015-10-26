@@ -2113,8 +2113,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
 
         // apply blurred image
-        if (artworkBitmap == null) {
-            artworkBitmap = mBlurredImage;
+        if (backdropBitmap == null) {
+            backdropBitmap = mBlurredImage;
             // might still be null
         }
 

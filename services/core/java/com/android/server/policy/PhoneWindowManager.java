@@ -642,7 +642,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mOverscanBottom = 0;
 
     // Custom hardware key rebinding
-    private int mDeviceHardwareKeys;
+    //private int mDeviceHardwareKeys;
     private boolean mDisableVibration;
  
     // Tracks user-customisable behavior for certain key events

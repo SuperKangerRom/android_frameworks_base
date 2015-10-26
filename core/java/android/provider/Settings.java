@@ -3338,12 +3338,6 @@ public final class Settings {
         public static final String DOCK_SOUNDS_ENABLED = Global.DOCK_SOUNDS_ENABLED;
 
         /**
-         * Enable double tap gesture anywhere on the lock screen put device to sleep
-         * @hide
-         */
-        public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
-
-        /**
          * Check the proximity sensor during wakeup
          * @hide
          */
@@ -4314,6 +4308,13 @@ public final class Settings {
          */
         public static final String KEY_CAMERA_DOUBLE_TAP_ACTION =
                 "key_camera_double_tap_action";
+
+        /**
+         * Whether to control brightness from status bar
+         *
+         * @hide
+         */
+        public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
 
         /**
          * Whether to show the IME switcher in the status bar
@@ -8625,13 +8626,6 @@ public final class Settings {
          * starting user code.  If 0, it will run normally.
          */
         public static final String WAIT_FOR_DEBUGGER = "wait_for_debugger";
-
-        /**
-         * Whether to control brightness from status bar
-         *
-         * @hide
-         */
-        public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
 
         /**
          * Control whether the process CPU usage meter should be shown.
