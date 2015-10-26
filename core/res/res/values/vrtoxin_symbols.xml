@@ -133,4 +133,23 @@
   <!-- Hardware key rebinding -->
   <java-symbol type="integer" name="config_deviceHardwareKeys" />
 
+  <!-- Themes and styles -->
+  <java-symbol type="style" name="Theme.Material.Dialog.Dark" />
+  <java-symbol type="style" name="Theme.Material.Dialog.Alert.Dark" />
+  <java-symbol type="style" name="TextAppearance.Material.Large.Dark" />
+  <java-symbol type="style" name="TextAppearance.Material.Small.Dark" />
+  <java-symbol type="drawable" name="material_bg_blue_grey" />
+  <java-symbol type="color" name="black" />
+  <!-- Slim recent app screen-->
+  <java-symbol type="integer" name="config_recentDefaultDur" />
+  <java-symbol type="integer" name="config_recentExitDur" />
+  <java-symbol type="style" name="Animation.RecentScreen" />
+  <java-symbol type="style" name="Animation.RecentScreen.Left" />
+  <java-symbol type="anim" name="recent_screen_enter" />
+  <java-symbol type="anim" name="recent_screen_enter_left" />
+  <java-symbol type="anim" name="recent_screen_fade_out" />
+
+  <!-- Config IME switcher -->
+  <java-symbol type="bool" name="config_show_IMESwitcher" />
+
 </resources>

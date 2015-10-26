@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Copyright (C) 2015 The VRToxin Project
+<!-- Copyright (C) 2014 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,7 +15,15 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <color name="material_blue_grey">#ff000000</color>
-    <drawable name="material_bg_blue_grey">#ff000000</drawable>
+    <style name="Theme.Material.Dialog.Dark" parent="Theme.Material.BaseDialog">
+        <item name="colorBackground">@drawable/material_bg_blue_grey</item>
+        <item name="windowBackground">@drawable/dialog_background_material</item>
+        <item name="colorControlActivated">@color/accent_material_light</item>
+    </style>
+
+    <style name="Theme.Material.Dialog.Alert.Dark" parent="Theme.Material.Dialog.BaseAlert">
+        <item name="colorBackground">@drawable/material_bg_blue_grey</item>
+        <item name="colorAccent">@color/accent_material_light</item>
+    </style>
 
 </resources>

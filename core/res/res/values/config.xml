@@ -2380,4 +2380,13 @@
         For example, a device with Home, Back and Menu keys would set this
         config to 7. -->
     <integer name="config_deviceHardwareKeys">0</integer>
+
+    <!-- The duration (in milliseconds) of recent app screen animation. -->
+    <integer name="config_recentDefaultDur">300</integer>
+
+    <!-- The duration (in milliseconds) of recent app screen exit animation. -->
+    <integer name="config_recentExitDur">450</integer>
+
+    <!-- Sets whether IME switcher on statusbar should be shown or not. -->
+    <bool name="config_show_IMESwitcher">true</bool>
 </resources>
