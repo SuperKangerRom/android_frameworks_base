@@ -3562,12 +3562,7 @@ public final class Settings {
          */
         public static final String SCREENSHOT_SOUND = "screenshot_sound";
 
-        /**
-         * Quick Settings Quick Pulldown
-         * 0 = off, 1 = right, 2 = left
-         * @hide
-         */
-        public static final String QS_QUICK_PULLDOWN = "qs_quick_pulldown";
+        // VRToxin end
 
         /**
          * Show search bar in recents
