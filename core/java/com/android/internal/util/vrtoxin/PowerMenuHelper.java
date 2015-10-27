@@ -85,7 +85,7 @@ public class PowerMenuHelper {
                 com.android.internal.R.drawable.ic_lock_airplane_mode_off);
         } else if (clickAction.equals(PowerMenuConstants.ACTION_USERS)) {
             return res.getDrawable(
-                com.android.internal.R.drawable.ic_lock_users);
+                com.android.internal.R.drawable.ic_lock_user);
         } else if (clickAction.equals(PowerMenuConstants.ACTION_SYSTEM_SETTINGS)) {
             return res.getDrawable(
                 com.android.internal.R.drawable.ic_lock_settings);

@@ -219,6 +219,17 @@ public class StatusBarManagerService extends IStatusBarService.Stub {
     }
 
     @Override
+    public void animateNotificationsOrSettingsPanel() {
+        enforceExpandStatusBar();
+        if (mBar != null) {
+            try {
+                mBar.animateNotificationsOrSettingsPanel();
+            } catch (RemoteException WTF) {
+            }
+        }
+    }
+
+    @Override
     public void disable(int what, IBinder token, String pkg) {
         disableForUser(what, token, pkg, mCurrentUserId);
     }

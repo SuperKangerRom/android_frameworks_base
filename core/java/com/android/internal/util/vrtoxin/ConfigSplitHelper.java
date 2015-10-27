@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.util.Log;
-import com.android.internal.util.vrtoxin.ActionConstants;
 
 import java.util.ArrayList;
 

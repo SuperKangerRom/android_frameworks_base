@@ -45,6 +45,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.PorterDuff.Mode;
@@ -662,16 +663,17 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                             ? user.id == 0 : (currentUser.id == user.id);
                     Drawable avatar = null;
                     Bitmap rawAvatar = um.getUserIcon(user.id);
-                    if (rawAvatar == null) {
-                        rawAvatar = UserIcons.convertToBitmap(UserIcons.getDefaultUserIcon(
-                                user.isGuest() ? UserHandle.USER_NULL : user.id, /*light=*/ false));
+                    if (rawAvatar != null) {
+                        avatar = new BitmapDrawable(mContext.getResources(),
+                                createCircularClip(rawAvatar, avatarSize, avatarSize));
+                    } else {
+                        avatar = UserIcons.getDefaultUserIcon(user.isGuest() ? UserHandle.USER_NULL
+                                : user.id, /* light= */ false);
                     }
-                    avatar = new BitmapDrawable(mContext.getResources(),
-                            createCircularClip(rawAvatar, avatarSize, avatarSize));
-
                     SinglePressAction switchToUser = new SinglePressAction(
                             com.android.internal.R.drawable.ic_lock_user, avatar,
-                            (user.name != null ? user.name : "Primary")) {
+                            (user.name != null ? user.name : "Primary")
+                            + (isCurrentUser ? " \u2714" : "")) {
                         public void onPress() {
                             try {
                                 ActivityManagerNative.getDefault().switchUser(user.id);

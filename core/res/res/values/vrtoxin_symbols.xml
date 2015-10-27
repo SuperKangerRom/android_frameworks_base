@@ -48,7 +48,7 @@
   <java-symbol type="drawable" name="global_actions_button_bg" />
   <java-symbol type="drawable" name="global_actions_silent_mode_item_bg" />
   <java-symbol type="drawable" name="ic_lock_reboot" />
-  <java-symbol type="drawable" name="ic_lock_users" />
+  <java-symbol type="drawable" name="ic_lock_user" />
   <java-symbol type="drawable" name="ic_lock_settings" />
   <java-symbol type="drawable" name="ic_lock_expanded_desktop" />
   <java-symbol type="drawable" name="ic_lock_screenshot" />

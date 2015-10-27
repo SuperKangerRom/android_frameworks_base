@@ -25,6 +25,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
+import com.android.internal.util.vrtoxin.ImageHelper;
 import com.android.internal.util.vrtoxin.ActionConstants;
 
 import java.io.File;
@@ -34,7 +35,9 @@ import java.util.ArrayList;
 
 public class ActionHelper {
 
+    private static final String SYSTEM_METADATA_NAME = "android";
     private static final String SYSTEMUI_METADATA_NAME = "com.android.systemui";
+    private static final String SETTINGS_METADATA_NAME = "com.android.settings";
 
     // General methods to retrieve the correct icon for the respective action.
     public static Drawable getActionIconImage(Context context,
@@ -140,7 +143,25 @@ public class ActionHelper {
                         SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_power", null, null);
         } else if (clickAction.equals(ActionConstants.ACTION_POWER_MENU)) {
             resId = systemUiResources.getIdentifier(
-                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_power_menu", null, null);
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_power", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_TORCH)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_torch", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_LAST_APP)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_lastapp", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_KILL)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_killtask", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_NOTIFICATIONS)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_notifications", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_SETTINGS_PANEL)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_quicksettings", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_SCREENSHOT)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_screenshot", null, null);
         } else if (clickAction.equals(ActionConstants.ACTION_VIB)) {
             resId = systemUiResources.getIdentifier(
                         SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_vib", null, null);
