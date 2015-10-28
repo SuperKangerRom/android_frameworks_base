@@ -264,7 +264,6 @@ public interface MetricsConstants {
     public static final int TUNER_BATTERY_PERCENTAGE = 237;
     public static final int FUELGAUGE_INACTIVE_APPS = 238;
 
-    // Euphoria-OS
     // QS Tiles
     public static final int QS_BRIGHTNESS = 239;
     public static final int QS_SCREEN_OFF = 240;

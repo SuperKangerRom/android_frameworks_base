@@ -22,6 +22,7 @@ import android.app.ActivityManagerNative;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
@@ -44,6 +45,7 @@ import android.view.KeyEvent;
 import android.view.WindowManagerGlobal;
 import android.widget.Toast;
 
+import android.view.WindowManagerPolicyControl;
 import com.android.internal.statusbar.IStatusBarService;
 
 import java.net.URISyntaxException;
@@ -156,21 +158,21 @@ public class Action {
                 }
                 startActivity(context, intent, barService, isKeyguardShowing);
                 return;
-/*
+
             } else if (action.equals(ActionConstants.ACTION_PIE)) {
                 boolean pieState = isPieEnabled(context);
-                if (pieState && !isNavBarEnabled(context) && isNavBarDefault(context)) {
+/*                if (pieState && !isNavBarEnabled(context) && isNavBarDefault(context)) {
                     Toast.makeText(context,
                             com.android.internal.R.string.disable_pie_navigation_error,
                             Toast.LENGTH_LONG).show();
                     return;
-                }
+                }*/
                 Settings.System.putIntForUser(
                         context.getContentResolver(),
                         Settings.System.PIE_CONTROLS,
                         pieState ? 0 : 1, UserHandle.USER_CURRENT);
                 return;
-            } else if (action.equals(ActionConstants.ACTION_NAVBAR)) {
+/*            } else if (action.equals(ActionConstants.ACTION_NAVBAR)) {
                 boolean navBarState = isNavBarEnabled(context);
                 if (navBarState && !isPieEnabled(context) && isNavBarDefault(context)) {
                     Toast.makeText(context,
@@ -290,6 +292,15 @@ public class Action {
                     powerManager.wakeUp(SystemClock.uptimeMillis());
                 }
                 return;
+            } else if (action.equals(ActionConstants.ACTION_EXPANDED_DESKTOP)) {
+                ContentResolver cr = context.getContentResolver();
+                String value = Settings.Global.getString(cr, Settings.Global.POLICY_CONTROL);
+                boolean isExpanded = "immersive.full=*".equals(value);
+                Settings.Global.putString(cr, Settings.Global.POLICY_CONTROL,
+                        isExpanded ? "" : "immersive.full=*");
+                if (isExpanded)
+                    WindowManagerPolicyControl.reloadFromSetting(context);
+                return;
             } else if (action.equals(ActionConstants.ACTION_SCREENSHOT)) {
                 try {
                     barService.toggleScreenshot();
@@ -353,13 +364,13 @@ public class Action {
             }
 
     }
-/*
+
     public static boolean isPieEnabled(Context context) {
         return Settings.System.getIntForUser(context.getContentResolver(),
                 Settings.System.PIE_CONTROLS,
                 0, UserHandle.USER_CURRENT) == 1;
     }
-
+/*
     public static boolean isNavBarEnabled(Context context) {
         return Settings.System.getIntForUser(context.getContentResolver(),
                 Settings.System.NAVIGATION_BAR_SHOW,
