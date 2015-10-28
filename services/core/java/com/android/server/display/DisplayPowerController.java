@@ -412,6 +412,46 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
     }
 
     /**
+     * Returns true if we want to overwrite doze values.
+     */
+    public boolean getOverwriteValue() {
+        final int values = Settings.System.getIntForUser(mContext.getContentResolver(),
+               Settings.System.DOZE_OVERWRITE_VALUE, 0,
+                    UserHandle.USER_CURRENT);
+        return values != 0;
+    }
+
+    /**
+     * Doze screen brightness.
+     */
+    private int screenBrightnessDozeConfig() {
+        if (getOverwriteValue()) {
+            return Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.DOZE_BRIGHTNESS, clampAbsoluteBrightness(mContext.getResources().getInteger(
+                    com.android.internal.R.integer.config_screenBrightnessDoze)), UserHandle.USER_CURRENT);
+        } else {
+            return clampAbsoluteBrightness(mContext.getResources().getInteger(
+                        com.android.internal.R.integer.config_screenBrightnessDoze));
+        }
+    }
+
+    /**
+     * Doze screen auto brightness.
+     */
+    public boolean allowAutoBrightnessWhileDozingConfig() {
+        if (getOverwriteValue()) {
+            return Settings.System.getIntForUser(
+                mContext.getContentResolver(), Settings.System.DOZE_AUTO_BRIGHTNESS,
+                        mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_allowAutoBrightnessWhileDozing)
+                        ? 1 : 0, UserHandle.USER_CURRENT) != 0;
+        } else {
+            return mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_allowAutoBrightnessWhileDozing);
+        }
+    }
+
+    /**
      * Returns true if the proximity sensor screen-off function is available.
      */
     public boolean isProximitySensorAvailable() {

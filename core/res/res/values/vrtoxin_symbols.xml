@@ -222,4 +222,6 @@
   <java-symbol type="style" name="Animation.RecentScreen" />
   <java-symbol type="style" name="Animation.RecentScreen.Left" />
 
+  <java-symbol type="array" name="anim_controls_entries" />
+
 </resources>

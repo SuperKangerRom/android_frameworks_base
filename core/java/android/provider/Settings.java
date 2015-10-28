@@ -4313,6 +4313,18 @@ public final class Settings {
         public static final String DOZE_TIME_MODE = "doze_time_mode";
 
         /**
+         * Brigthness level for ambient display
+         * @hide
+         */
+		public static final String DOZE_BRIGHTNESS = "doze_brightness";
+
+        /**
+         * Auto brigthness for ambient display
+         * @hide
+         */
+        public static final String DOZE_AUTO_BRIGHTNESS = "doze_auto_brightness";
+
+        /**
          * @hide
          */
         public static final String ANIMATION_CONTROLS_NO_OVERRIDE = "animation_controls_no_override";
