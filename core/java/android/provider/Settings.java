@@ -7690,12 +7690,6 @@ public final class Settings {
         public static final String QUICK_SETTINGS_TILES_VIBRATE = "quick_settings_vibrate";
 
         /**
-         * Whether to show four tiles per row.
-         * @hide
-         */
-        public static final String QS_USE_FOUR_COLUMNS = "qs_use_four_columns";
-
-        /**
          * Use "main" tiles on the first row of the quick settings panel
          * 0 = no, 1 = yes
          * @hide
