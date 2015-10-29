@@ -2691,6 +2691,14 @@ public class Intent implements Parcelable, Cloneable {
             "android.intent.action.GET_RESTRICTION_ENTRIES";
 
     /**
+     * Extra for {@link #ACTION_RECENTS_LONG_PRESS} that provides the package name of the
+     * app in foreground when recents was long pressed. Can be reused for other purposes.
+     * @hide
+     */
+    public static final String EXTRA_CURRENT_PACKAGE_NAME =
+            "com.cyanogenmod.intent.extra.CURRENT_PACKAGE_NAME";
+
+    /**
      * <p>Broadcast Action: The state of the HOTWORD audio input has changed.:</p>
      * <ul>
      *   <li><em>state</em> - A String value indicating the state of the input.
