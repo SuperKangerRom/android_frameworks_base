@@ -3880,8 +3880,6 @@ public final class Settings {
          */
         public static final String SCREENSHOT_SOUND = "screenshot_sound";
 
-        // VRToxin end
-
         /**
          * Show search bar in recents
          * @hide
@@ -4897,6 +4895,12 @@ public final class Settings {
          * @hide
          */
         public static final String SLIM_RECENTS_EMPTY_ICON_COLOR = "slim_recents_empty_icon_color";
+
+        /**
+         * This preference enables showing the power menu on LockScreen.
+         * @hide
+         */
+        public static final String POWER_MENU_LOCKSCREEN = "power_menu_lockscreen";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
