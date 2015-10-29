@@ -41,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.systemui.R;
+import com.android.systemui.recents.model.RecentsTaskLoader;
 
 import java.util.ArrayList;
 
@@ -51,6 +52,16 @@ public class ScreenPinningRequest implements View.OnClickListener {
     private final WindowManager mWindowManager;
 
     private RequestWindowView mRequestWindow;
+
+    public ScreenPinningCallback mCallback;
+
+    public interface ScreenPinningCallback {
+        public void onStartLockTask();
+    }
+
+    public void setCallback(ScreenPinningCallback c) {
+        mCallback = c;
+    }
 
     public ScreenPinningRequest(Context context) {
         mContext = context;
@@ -106,6 +117,7 @@ public class ScreenPinningRequest implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.screen_pinning_ok_button || mRequestWindow == v) {
             try {
+                if (mCallback != null) mCallback.onStartLockTask();
                 ActivityManagerNative.getDefault().startLockTaskModeOnCurrent();
             } catch (RemoteException e) {}
         }
@@ -144,7 +156,7 @@ public class ScreenPinningRequest implements View.OnClickListener {
             boolean isLandscape = isLandscapePhone(mContext);
 
             inflateView(isLandscape);
-            int bgColor = mContext.getColor(
+            int bgColor = mContext.getResources().getColor(
                     R.color.screen_pinning_request_window_bg);
             if (ActivityManager.isHighEndGfx()) {
                 mLayout.setAlpha(0f);
