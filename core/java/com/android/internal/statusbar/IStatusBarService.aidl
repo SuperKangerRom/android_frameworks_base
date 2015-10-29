@@ -73,6 +73,7 @@ interface IStatusBarService
     void cancelPreloadRecentApps();
     void showCustomIntentAfterKeyguard(inout Intent intent);
     void toggleScreenshot();
+    void toggleSmartPulldown();
     void toggleLastApp();
     void toggleKillApp();
 

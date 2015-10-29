@@ -51,6 +51,7 @@ oneway interface IStatusBar
     void showScreenPinningRequest();
     void showCustomIntentAfterKeyguard(inout Intent intent);
     void toggleScreenshot();
+    void toggleSmartPulldown();
     void toggleLastApp();
     void toggleKillApp();
 

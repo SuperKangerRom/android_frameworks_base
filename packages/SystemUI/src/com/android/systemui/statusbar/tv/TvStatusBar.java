@@ -90,6 +90,10 @@ public class TvStatusBar extends BaseStatusBar {
             boolean showImeSwitcher) {
     }
 
+    @Override // CommandQueue
+    public void toggleSmartPulldown() {
+    }
+
     @Override
     public void toggleRecentApps() {
     }

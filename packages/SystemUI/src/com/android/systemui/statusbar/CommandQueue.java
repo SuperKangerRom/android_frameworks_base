@@ -71,6 +71,7 @@ public class CommandQueue extends IStatusBar.Stub {
     private static final int MSG_TOGGLE_SCREENSHOT                  = 27 << MSG_SHIFT;
     private static final int MSG_ANIMATE_PANEL_FROM_NAVBAR          = 28 << MSG_SHIFT;
     private static final int MSG_SET_PIE_TRIGGER_MASK               = 29 << MSG_SHIFT;
+    private static final int MSG_SMART_PULLDOWN                     = 30 << MSG_SHIFT;
 
     public static final int FLAG_EXCLUDE_NONE = 0;
     public static final int FLAG_EXCLUDE_SEARCH_PANEL = 1 << 0;
@@ -118,6 +119,7 @@ public class CommandQueue extends IStatusBar.Stub {
         public void showAssistDisclosure();
         public void startAssist(Bundle args);
         public void showCustomIntentAfterKeyguard(Intent intent);
+        public void toggleSmartPulldown();
         public void toggleLastApp();
         public void toggleKillApp();
         public void toggleScreenshot();
@@ -327,6 +329,13 @@ public class CommandQueue extends IStatusBar.Stub {
         m.sendToTarget();
     }
 
+    public void toggleSmartPulldown() {
+        synchronized (mList) {
+            mHandler.removeMessages(MSG_SMART_PULLDOWN);
+            mHandler.sendEmptyMessage(MSG_SMART_PULLDOWN);
+        }
+    }
+
     public void toggleLastApp() {
         synchronized (mList) {
             mHandler.removeMessages(MSG_TOGGLE_LAST_APP);
@@ -451,6 +460,9 @@ public class CommandQueue extends IStatusBar.Stub {
                     break;
                 case MSG_START_CUSTOM_INTENT_AFTER_KEYGUARD:
                     mCallbacks.showCustomIntentAfterKeyguard((Intent) msg.obj);
+                    break;
+                case MSG_SMART_PULLDOWN:
+                    mCallbacks.toggleSmartPulldown();
                     break;
                 case MSG_TOGGLE_LAST_APP:
                     mCallbacks.toggleLastApp();

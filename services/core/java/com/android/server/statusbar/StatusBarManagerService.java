@@ -538,6 +538,14 @@ public class StatusBarManagerService extends IStatusBarService.Stub {
         }
     }
 
+    public void toggleSmartPulldown() {
+        if (mBar != null) {
+            try {
+                mBar.toggleSmartPulldown();
+            } catch (RemoteException ex) {}
+        }
+    }
+
     @Override
     public void appTransitionCancelled() {
         if (mBar != null) {

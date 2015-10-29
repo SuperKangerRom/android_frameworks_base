@@ -96,6 +96,7 @@ public class Action {
             if (collapseShade) {
                 if (!action.equals(ActionConstants.ACTION_SETTINGS_PANEL)
                         && !action.equals(ActionConstants.ACTION_NOTIFICATIONS)
+                        && !action.equals(ActionConstants.ACTION_SMART_PULLDOWN)
                         && !action.equals(ActionConstants.ACTION_THEME_SWITCH)
                         && !action.equals(ActionConstants.ACTION_TORCH)) {
                     try {
@@ -158,7 +159,15 @@ public class Action {
                 }
                 startActivity(context, intent, barService, isKeyguardShowing);
                 return;
-
+            } else if (action.equals(ActionConstants.ACTION_SMART_PULLDOWN)) {
+                if (isKeyguardShowing && isKeyguardSecure) {
+                    return;
+                }
+                try {
+                    barService.toggleSmartPulldown();
+                } catch (RemoteException e) {
+                }
+                return;
             } else if (action.equals(ActionConstants.ACTION_PIE)) {
                 boolean pieState = isPieEnabled(context);
 /*                if (pieState && !isNavBarEnabled(context) && isNavBarDefault(context)) {
