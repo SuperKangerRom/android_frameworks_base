@@ -5066,6 +5066,25 @@ public final class Settings {
         public static final String RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
 
         /**
+         * Wether to use a custom color for the clear all button icon
+         *
+         * @hide
+         */
+        public static final String RECENTS_CLEAR_ALL_USE_ICON_COLOR = "recents_clear_all_use_icon_color";
+
+        /*
+         * Color of the clear all button background in the recent apps panel
+         * @hide
+         */
+        public static final String RECENT_APPS_CLEAR_ALL_BG_COLOR = "recent_apps_clear_all_bg_color";
+
+        /**
+         * Color of the clear all button icon in the recent apps panel
+         * @hide
+         */
+        public static final String RECENT_APPS_CLEAR_ALL_ICON_COLOR = "recent_apps_clear_all_icon_color";
+
+        /**
          * Whether to show or hide search bar in recents view
          * @hide
          */

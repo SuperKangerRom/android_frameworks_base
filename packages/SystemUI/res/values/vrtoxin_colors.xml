@@ -72,7 +72,11 @@
     <!-- Slim Recents End -->
 
     <!-- Floating action button -->
-    <color name="fab_color">#ff009688</color>
-    <color name="floating_action_button_icon_color">#ffffff</color>
+    <color name="fab_background_color">#ffffffff</color>
+    <color name="floating_action_button_icon_color">#4dffffff</color>
+    <!-- The default color of the clear recents button icon on dark background  -->
+    <color name="fab_icon_light_color">#ffffffff</color>
+    <!-- The default color for the clear recents button icon on light background  -->
+    <color name="fab_icon_dark_color">#8a000000</color>
 
 </resources>
