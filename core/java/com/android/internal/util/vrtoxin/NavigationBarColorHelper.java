@@ -79,7 +79,7 @@ public class NavigationBarColorHelper {
 
     public static int getIconColorMode(Context context) {
         return Settings.System.getInt(context.getContentResolver(),
-                Settings.System.NAVIGATION_BAR_ICON_COLOR_MODE, 2);
+                Settings.System.NAVIGATION_BAR_ICON_COLOR_MODE, 1);
     }
 
     private static int getRippleColorMode(Context context) {
