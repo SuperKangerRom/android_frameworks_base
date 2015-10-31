@@ -272,11 +272,7 @@ public interface MetricsConstants {
     public static final int QS_HEADSUP = 243;
 
     // VRToxin Shit
-    public static final int VRTOXIN_AOSP = 244;
-
-    // Notifcation and battery settings
-    public static final int NOTIFICATION_LIGHT_SETTINGS = 245;
-    public static final int BATTERY_LIGHT_SETTINGS = 246;
+    public static final int VRTOXIN_AOSP = 420;
 
     // These constants must match those in the analytic pipeline, do not edit.
     // Add temporary values to the top of MetricsLogger instead.
