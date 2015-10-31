@@ -175,6 +175,7 @@ import android.os.storage.StorageEventListener;
 import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.os.storage.VolumeRecord;
+import android.provider.Settings.Secure;
 import android.security.KeyStore;
 import android.security.SystemKeyStore;
 import android.system.ErrnoException;
@@ -1445,7 +1446,7 @@ public class PackageManagerService extends IPackageManager.Stub {
                                     }
                                 }
                             }
-                            if (!update && !isSystemApp(res.pkg.applicationInfo)) {
+                            if (!update && !isSystemApp(res.pkg)) {
                                 boolean privacyGuard = Secure.getIntForUser(
                                         mContext.getContentResolver(),
                                         android.provider.Settings.Secure.PRIVACY_GUARD_DEFAULT,
