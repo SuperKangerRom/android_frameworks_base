@@ -257,15 +257,17 @@ public class AppOpsManager {
     /** @hide Wifi state change **/
     public static final int OP_WIFI_CHANGE = 63;
     /** @hide */
-    public static final int OP_BOOT_COMPLETED = 64;
+    public static final int OP_BLUETOOTH_CHANGE = 64;
     /** @hide */
-    public static final int OP_NFC_CHANGE = 65;
+    public static final int OP_BOOT_COMPLETED = 65;
     /** @hide */
-    public static final int OP_DATA_CONNECT_CHANGE = 66;
+    public static final int OP_NFC_CHANGE = 66;
     /** @hide */
-    public static final int OP_SU = 67;
+    public static final int OP_DATA_CONNECT_CHANGE = 67;
     /** @hide */
-    public static final int _NUM_OP = 68;
+    public static final int OP_SU = 68;
+    /** @hide */
+    public static final int _NUM_OP = 69;
 
     /** Access to coarse location information. */
     public static final String OPSTR_COARSE_LOCATION = "android:coarse_location";
@@ -366,6 +368,8 @@ public class AppOpsManager {
     /** @hide **/
     private static final String OPSTR_WIFI_CHANGE =
             "android:wifi_change";
+    private static final String OPSTR_BLUETOOTH_CHANGE =
+            "android:bluetooth_change";
     private static final String OPSTR_BOOT_COMPLETED =
             "android:boot_completed";
     private static final String OPSTR_NFC_CHANGE =
@@ -448,6 +452,7 @@ public class AppOpsManager {
             OP_TURN_SCREEN_ON,
             OP_GET_ACCOUNTS,
             OP_WIFI_CHANGE,
+            OP_BLUETOOTH_CHANGE,
             OP_BOOT_COMPLETED,
             OP_NFC_CHANGE,
             OP_DATA_CONNECT_CHANGE,
@@ -523,6 +528,7 @@ public class AppOpsManager {
             null,
             OPSTR_GET_ACCOUNTS,
             OPSTR_WIFI_CHANGE,
+            OPSTR_BLUETOOTH_CHANGE,
             OPSTR_BOOT_COMPLETED,
             OPSTR_NFC_CHANGE,
             OPSTR_DATA_CONNECT_CHANGE,
@@ -598,6 +604,7 @@ public class AppOpsManager {
             "TURN_ON_SCREEN",
             "GET_ACCOUNTS",
             "WIFI_CHANGE",
+            "BLUETOOTH_CHANGE",
             "BOOT_COMPLETED",
             "NFC_CHANGE",
             "DATA_CONNECT_CHANGE",
@@ -673,6 +680,7 @@ public class AppOpsManager {
             null, // no permission for turning the screen on
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.BLUETOOTH,
             Manifest.permission.RECEIVE_BOOT_COMPLETED,
             Manifest.permission.NFC,
             Manifest.permission.MODIFY_PHONE_STATE,
@@ -749,6 +757,7 @@ public class AppOpsManager {
             null, // TURN_ON_SCREEN
             null, // GET_ACCOUNTS
             null, //WIFI_CHANGE
+            null, //BLUETOOTH_CHANGE
             null, //BOOT_COMPLETED
             null, //NFC_CHANGE
             null, //DATA_CONNECT_CHANGE
@@ -824,6 +833,7 @@ public class AppOpsManager {
             false, // TURN_ON_SCREEN
             false, // GET_ACCOUNTS
             false, // WIFI_CHANGE
+            false, // BLUETOOTH_CHANGE
             false, // BOOT_COMPLETED
             false, // NFC_CHANGE
             false, //DATA_CONNECT_CHANGE
@@ -898,6 +908,7 @@ public class AppOpsManager {
             AppOpsManager.MODE_ALLOWED,  // OP_TURN_ON_SCREEN
             AppOpsManager.MODE_ALLOWED,
             AppOpsManager.MODE_ALLOWED, // OP_WIFI_CHANGE
+            AppOpsManager.MODE_ASK,     // OP_BLUETOOTH_CHANGE
             AppOpsManager.MODE_ALLOWED, // OP_BOOT_COMPLETED
             AppOpsManager.MODE_ALLOWED, // OP_NFC_CHANGE
             AppOpsManager.MODE_ALLOWED,
@@ -973,6 +984,7 @@ public class AppOpsManager {
             AppOpsManager.MODE_ALLOWED, // OP_TURN_ON_SCREEN
             AppOpsManager.MODE_ALLOWED, // OP_GET_ACCOUNTS
             AppOpsManager.MODE_ASK,     // OP_WIFI_CHANGE
+            AppOpsManager.MODE_ASK,     // OP_BLUETOOTH_CHANGE
             AppOpsManager.MODE_ALLOWED, // OP_BOOT_COMPLETED
             AppOpsManager.MODE_ASK,     // OP_NFC_CHANGE
             AppOpsManager.MODE_ASK,     // OP_DATA_CONNECT_CHANGE
@@ -1047,6 +1059,7 @@ public class AppOpsManager {
         false,    // TURN_ON_SCREEN
         false,    // GET_ACCOUNTS
         true,     // OP_WIFI_CHANGE
+        true,     // OP_BLUETOOTH_CHANGE
         false,    // OP_BOOT_COMPLETED
         true,     // OP_NFC_CHANGE
         true,     // OP_DATA_CONNECT_CHANGE
@@ -1125,6 +1138,7 @@ public class AppOpsManager {
             false,
             false,
             false,     // OP_WIFI_CHANGE
+            false,     // OP_BLUETOOTH_CHANGE
             false,     // OP_BOOT_COMPLETED
             false,     // OP_NFC_CHANGE
             false,     // OP_DATA_CONNECT_CHANGE
