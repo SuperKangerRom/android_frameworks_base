@@ -615,13 +615,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_WEATHER_SIZE))
                     || uri.equals(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_WEATHER_FONT_STYLE))) {
-            } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP))
-                    || uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_WEATHER_HIDE_WEATHER))
-                    || uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_WEATHER_NUMBER_OF_NOTIFICATION_ICONS))) {
-                setWeatherTempVisibility();
+                updateStatusBarWeatherTemp();
+                updateBarWeatherTempStyle();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP))
                     || uri.equals(Settings.System.getUriFor(
@@ -725,6 +720,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                         Settings.System.NAVBAR_LEFT_IN_LANDSCAPE, 0) == 1;
                 mNavigationBarView.setLeftInLandscape(navLeftInLandscape);
             }
+            updateStatusBarWeatherTemp();
+            updateBarWeatherTempStyle();
         }
     }
 
@@ -2426,6 +2423,30 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
         if (mKeyguardStatusBar != null) {
             mKeyguardStatusBar.updateCarrierLabelColor();
+        }
+    }
+
+    private void updateStatusBarWeatherTemp() {
+        updateWeatherTextState(mWeatherController.getWeatherInfo().temp,
+            mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
+    }
+
+    private void updateBarWeatherTempStyle() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        mWeatherTempStyle = Settings.System.getIntForUser(
+                resolver, Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE, 0,
+                UserHandle.USER_CURRENT);
+
+        if (mWeatherTempStyle == 0) {
+            mWeatherTempView.setVisibility(View.GONE);
+            mWeatherTempView = (TextView) mStatusBarView.findViewById(R.id.weather_temp);
+            setWeatherTempVisibility();
+        }
+        if (mWeatherTempStyle == 1) {
+            mWeatherTempView.setVisibility(View.GONE);
+            mWeatherTempView = (TextView) mStatusBarView.findViewById(R.id.left_weather_temp);
+            setWeatherTempVisibility();
         }
     }
 
