@@ -749,8 +749,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 break;
         }
 
-        setClockAndDateStatus();
-        mClockController.updateClockView(mClockView);
+        if (mClockView != null) {
+            if (mClockLocation == Clock.STYLE_CLOCK_CENTER && mState == StatusBarState.KEYGUARD) {
+                mClockView.setVisibility(View.GONE);
+            }
+            setClockAndDateStatus();
+            mClockController.updateClockView(mClockView);
+        }
     }
 
     public void setClockAndDateStatus() {
@@ -4477,6 +4482,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         updatePublicMode();
         updateStackScrollerState(goingToFullShade);
         updateNotifications();
+        updateClockView();
         checkBarModes();
         updateMediaMetaData(false);
         mKeyguardMonitor.notifyKeyguardState(mStatusBarKeyguardViewManager.isShowing(),
