@@ -5146,6 +5146,48 @@ public final class Settings {
         public static final String HW_KEYS_ENABLED = "hw_keys_enabled";
 
         /**
+         * Color of the quick settings panel background
+         * @hide
+         */
+        public static final String QS_BACKGROUND_COLOR = "qs_background_color";
+
+        /**
+         * Color of the quick settings icons
+         * @hide
+         */
+        public static final String QS_ICON_COLOR = "qs_icons_color";
+
+        /**
+         * Color of the quick settings icon background ripple effect
+         * @hide
+         */
+        public static final String QS_RIPPLE_COLOR = "qs_ripple_color";
+
+        /**
+         * Color of the quick settings text
+         * @hide
+         */
+        public static final String QS_TEXT_COLOR = "qs_text_color";
+
+        /**
+         *  Color of the used portion of the qs brightness slider
+         * @hide
+         */
+        public static final String QS_BRIGHTNESS_SLIDER_COLOR = "qs_brightness_slider_color";
+
+        /**
+         *  Color of the unused portion of the qs brightness slider
+         * @hide
+         */
+        public static final String QS_BRIGHTNESS_SLIDER_BG_COLOR = "qs_brightness_slider_bg_color";
+
+        /**
+         *  Color of the qs brightness slider icon
+         * @hide
+         */
+        public static final String QS_BRIGHTNESS_SLIDER_ICON_COLOR = "qs_brightness_slider_icon_color";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

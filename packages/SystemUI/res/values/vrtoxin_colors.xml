@@ -79,4 +79,7 @@
     <!-- The default color for the clear recents button icon on light background  -->
     <color name="fab_icon_dark_color">#8a000000</color>
 
+    <!-- QS Custom colors -->
+    <color name="qs_background_drawable_color">#FFFFFFFF</color>
+
 </resources>

@@ -16,12 +16,15 @@
 
 package com.android.systemui.qs;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff.Mode;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,6 +35,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.internal.util.vrtoxin.QSColorHelper;
 
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.R;
@@ -55,6 +60,10 @@ public class QSDetailItems extends FrameLayout {
     private TextView mEmptyText;
     private ImageView mEmptyIcon;
     private int mMaxItems;
+
+    private int mTextColor;
+    private int mEmptyTextColor;
+    private int mIconColor;
 
     public QSDetailItems(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -106,8 +115,11 @@ public class QSDetailItems extends FrameLayout {
     }
 
     public void setEmptyState(int icon, int text) {
+        updateColors();
         mEmptyIcon.setImageResource(icon);
         mEmptyText.setText(text);
+        mEmptyIcon.setColorFilter(mIconColor, Mode.MULTIPLY);
+        mEmptyText.setTextColor(mEmptyTextColor);
     }
 
     /**
@@ -186,12 +198,15 @@ public class QSDetailItems extends FrameLayout {
                     item.overlay.getIntrinsicHeight());
             iv.getOverlay().add(item.overlay);
         }
+        iv.setColorFilter(mIconColor, Mode.MULTIPLY);
         final TextView title = (TextView) view.findViewById(android.R.id.title);
         title.setText(item.line1);
+        title.setTextColor(mTextColor);
         final TextView summary = (TextView) view.findViewById(android.R.id.summary);
         final boolean twoLines = !TextUtils.isEmpty(item.line2);
         title.setMaxLines(twoLines ? 1 : 2);
         summary.setVisibility(twoLines ? VISIBLE : GONE);
+        //disconnect.setColorFilter(mIconColor, Mode.MULTIPLY); //enable after signal icon coloring is added
         summary.setText(twoLines ? item.line2 : null);
         view.setOnClickListener(new OnClickListener() {
             @Override
@@ -211,6 +226,12 @@ public class QSDetailItems extends FrameLayout {
                 }
             }
         });
+    }
+
+    private void updateColors() {
+        mIconColor = QSColorHelper.getIconColor(mContext);
+        mTextColor = QSColorHelper.getTextColor(mContext);
+        mEmptyTextColor = (153 << 24) | (mTextColor & 0x00ffffff); // Text color with a transparency of 60%
     }
 
     private class H extends Handler {

@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +39,8 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.internal.util.vrtoxin.QSColorHelper;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.FontSizeUtils;
@@ -164,6 +167,8 @@ public class QSPanel extends ViewGroup {
     private void updateDetailText() {
         mDetailDoneButton.setText(R.string.quick_settings_done);
         mDetailSettingsButton.setText(R.string.quick_settings_more_settings);
+        mDetailDoneButton.setTextColor(QSColorHelper.getTextColor(mContext));
+        mDetailSettingsButton.setTextColor(QSColorHelper.getTextColor(mContext));
     }
 
     public void setBrightnessMirror(BrightnessMirrorController c) {
@@ -308,6 +313,9 @@ public class QSPanel extends ViewGroup {
         for (int i = 0; i < mRecords.size(); i++) {
             TileRecord r = mRecords.get(i);
             r.tileView.setDual(mUseMainTiles && i < 2);
+            r.tileView.setLabelColor();
+            r.tileView.setIconColor();
+            r.tileView.setRippleColor();
             r.tile.refreshState();
         }
         mFooter.refreshState();
@@ -670,6 +678,18 @@ public class QSPanel extends ViewGroup {
         final boolean scanState = mDetailRecord instanceof TileRecord
                 && ((TileRecord) mDetailRecord).scanState;
         fireScanStateChanged(scanState);
+    }
+
+    public void setDetailBackgroundColor(int color) {
+        if (mDetail != null) {
+            mDetail.getBackground().setColorFilter(
+                    color, Mode.MULTIPLY);
+        }
+    }
+
+    public void setColors() {
+        refreshAllTiles();
+        mBrightnessController.setColors();
     }
 
     private class H extends Handler {

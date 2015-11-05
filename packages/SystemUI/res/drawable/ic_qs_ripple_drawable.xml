@@ -11,12 +11,9 @@
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
-     limitations under the License.
+     limitations under the License
 -->
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:insetTop="@dimen/notification_material_rounded_rect_radius_negative">
-    <shape>
-        <solid android:color="@color/qs_background_drawable_color"/>
-        <corners android:radius="@dimen/notification_material_rounded_rect_radius"/>
-    </shape>
-</inset>
+
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="?android:attr/colorControlHighlight">
+</ripple>

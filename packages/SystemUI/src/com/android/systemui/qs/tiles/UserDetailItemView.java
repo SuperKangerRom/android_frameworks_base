@@ -17,6 +17,7 @@
 package com.android.systemui.qs.tiles;
 
 import com.android.internal.util.ArrayUtils;
+import com.android.internal.util.vrtoxin.QSColorHelper;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.UserAvatarView;
@@ -27,6 +28,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,6 +125,14 @@ public class UserDetailItemView extends LinearLayout {
     private void updateTypeface() {
         boolean activated = ArrayUtils.contains(getDrawableState(), android.R.attr.state_activated);
         mName.setTypeface(activated ? mActivatedTypeface : mRegularTypeface);
+    }
+
+    public void setTextColor(boolean activated) {
+        int textColorNormal = QSColorHelper.getTextColor(mContext);
+        int textColorActivated = getContext().getResources().getColor(
+                R.color.system_accent_color);
+        int textColorDeactivated = (102 << 24) | (textColorNormal & 0x00ffffff); // Text color normal with a transparency of 40%
+        mName.setTextColor(activated ? textColorActivated : textColorDeactivated);
     }
 
     @Override

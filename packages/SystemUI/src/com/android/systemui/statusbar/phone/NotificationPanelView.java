@@ -24,9 +24,11 @@ import android.animation.ValueAnimator;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
@@ -301,6 +303,7 @@ public class NotificationPanelView extends PanelView implements
                 }
             }
         });
+        setQSBackgroundColor();
     }
 
     @Override
@@ -2479,6 +2482,30 @@ public class NotificationPanelView extends PanelView implements
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_SMART_PULLDOWN),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_BACKGROUND_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_ICON_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.System.QS_RIPPLE_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_TEXT_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.QS_SHOW_BRIGHTNESS_SLIDER),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_BG_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_ICON_COLOR),
+                    false, this);
             update();
         }
 
@@ -2489,6 +2516,33 @@ public class NotificationPanelView extends PanelView implements
         }
 
         @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            ContentResolver resolver = mContext.getContentResolver();
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_BACKGROUND_COLOR))) {
+                setQSBackgroundColor();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_BG_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_BRIGHTNESS_SLIDER_ICON_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_ICON_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_RIPPLE_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_TEXT_COLOR))) {
+                setQSColors();
+            }
+            update();
+        }
+
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
             mOneFingerQuickSettingsIntercept = Settings.System.getIntForUser(resolver,
@@ -2500,6 +2554,28 @@ public class NotificationPanelView extends PanelView implements
             mQsSmartPullDown = Settings.System.getIntForUser(
                     resolver, Settings.System.QS_SMART_PULLDOWN, 0,
                     UserHandle.USER_CURRENT);
+
+            setQSBackgroundColor();
+            setQSColors();
         }
+    }
+
+    private void setQSBackgroundColor() {
+        ContentResolver resolver = mContext.getContentResolver();
+        final int bgColor = Settings.System.getInt(
+                resolver, Settings.System.QS_BACKGROUND_COLOR, 0xff263238);
+        if (mQsContainer != null) {
+            mQsContainer.getBackground().setColorFilter(
+                    bgColor, Mode.MULTIPLY);
+        }
+        if (mQsPanel != null) {
+            mQsPanel.setDetailBackgroundColor(bgColor);
+        }
+    }
+
+    private void setQSColors() {
+        if (mQsPanel != null) {
+            mQsPanel.setColors();
+         }
     }
 }
