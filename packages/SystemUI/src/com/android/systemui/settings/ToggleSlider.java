@@ -198,7 +198,6 @@ public class ToggleSlider extends RelativeLayout {
     private final OnCheckedChangeListener mCheckListener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton toggle, boolean checked) {
-            mSlider.setEnabled(!checked);
 
             if (mListener != null) {
                 mListener.onChanged(
