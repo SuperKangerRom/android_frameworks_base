@@ -319,6 +319,9 @@ public final class ActivityManagerService extends ActivityManagerNative
     // How long we wait for a launched process to attach to the activity manager
     // before we decide it's never going to come up for real.
     static final int PROC_START_TIMEOUT = 10*1000;
+    // How long we wait for an attached process to publish its content providers
+    // before we decide it must be hung.
+    static final int CONTENT_PROVIDER_PUBLISH_TIMEOUT = 10*1000;
 
     // How long we wait for a launched process to attach to the activity manager
     // before we decide it's never going to come up for real, when the process was
@@ -404,6 +407,17 @@ public final class ActivityManagerService extends ActivityManagerNative
             ApplicationInfo.FLAG_SYSTEM|ApplicationInfo.FLAG_PERSISTENT;
     private boolean mHomeKilled = false;
     private String mHomeProcessName = null;
+
+
+    // Delay to disable app launch boost
+    static final int APP_BOOST_MESSAGE_DELAY = 3000;
+    // Lower delay than APP_BOOST_MESSAGE_DELAY to disable the boost
+    static final int APP_BOOST_TIMEOUT = 2500;
+
+    private static native int nativeMigrateToBoost();
+    private static native int nativeMigrateFromBoost();
+    private boolean mIsBoosted = false;
+    private long mBoostStartTime = 0;
 
     /** All system services */
     SystemServiceManager mSystemServiceManager;
@@ -1357,8 +1371,10 @@ public final class ActivityManagerService extends ActivityManagerNative
     static final int REPORT_TIME_TRACKER_MSG = 55;
     static final int REPORT_USER_SWITCH_COMPLETE_MSG = 56;
     static final int SHUTDOWN_UI_AUTOMATION_CONNECTION_MSG = 57;
-    static final int POST_PRIVACY_NOTIFICATION_MSG = 58;
-    static final int CANCEL_PRIVACY_NOTIFICATION_MSG = 59;
+    static final int APP_BOOST_DEACTIVATE_MSG = 58;
+    static final int CONTENT_PROVIDER_PUBLISH_TIMEOUT_MSG = 59;
+    static final int POST_PRIVACY_NOTIFICATION_MSG = 60;
+    static final int CANCEL_PRIVACY_NOTIFICATION_MSG = 61;
 
     static final int FIRST_ACTIVITY_STACK_MSG = 100;
     static final int FIRST_BROADCAST_QUEUE_MSG = 200;
@@ -1703,6 +1719,12 @@ public final class ActivityManagerService extends ActivityManagerNative
                     processStartTimedOutLocked(app);
                 }
             } break;
+            case CONTENT_PROVIDER_PUBLISH_TIMEOUT_MSG: {
+                ProcessRecord app = (ProcessRecord)msg.obj;
+                synchronized (ActivityManagerService.this) {
+                    processContentProviderPublishTimedOutLocked(app);
+                }
+            } break;
             case DO_PENDING_ACTIVITY_LAUNCHES_MSG: {
                 synchronized (ActivityManagerService.this) {
                     mStackSupervisor.doPendingActivityLaunchesLocked(true);
@@ -2044,6 +2066,20 @@ public final class ActivityManagerService extends ActivityManagerNative
                 // Only a UiAutomation can set this flag and now that
                 // it is finished we make sure it is reset to its default.
                 mUserIsMonkey = false;
+            } break;
+            case APP_BOOST_DEACTIVATE_MSG : {
+                synchronized(ActivityManagerService.this) {
+                    if (mIsBoosted) {
+                        if (mBoostStartTime < (SystemClock.uptimeMillis() - APP_BOOST_TIMEOUT)) {
+                            nativeMigrateFromBoost();
+                            mIsBoosted = false;
+                            mBoostStartTime = 0;
+                        } else {
+                            Message newmsg = mHandler.obtainMessage(APP_BOOST_DEACTIVATE_MSG);
+                            mHandler.sendMessageDelayed(newmsg, APP_BOOST_TIMEOUT);
+                        }
+                    }
+                }
             } break;
             case POST_PRIVACY_NOTIFICATION_MSG: {
                 INotificationManager inm = NotificationManager.getService();
@@ -3203,6 +3239,16 @@ public final class ActivityManagerService extends ActivityManagerNative
             app = null;
         }
 
+        // app launch boost for big.little configurations
+        // use cpusets to migrate freshly launched tasks to big cores
+        synchronized(ActivityManagerService.this) {
+            nativeMigrateToBoost();
+            mIsBoosted = true;
+            mBoostStartTime = SystemClock.uptimeMillis();
+            Message msg = mHandler.obtainMessage(APP_BOOST_DEACTIVATE_MSG);
+            mHandler.sendMessageDelayed(msg, APP_BOOST_MESSAGE_DELAY);
+        }
+
         // We don't have to do anything more if:
         // (1) There is an existing application record; and
         // (2) The caller doesn't think it is dead, OR there is no thread
@@ -4133,8 +4179,8 @@ public final class ActivityManagerService extends ActivityManagerNative
                         if (debug) {
                             Slog.v(TAG, "Next matching activity: found current " + r.packageName
                                     + "/" + r.info.name);
-                            Slog.v(TAG, "Next matching activity: next is " + aInfo.packageName
-                                    + "/" + aInfo.name);
+                            Slog.v(TAG, "Next matching activity: next is " + ((aInfo == null)
+                                    ? "null" : aInfo.packageName + "/" + aInfo.name));
                         }
                         break;
                     }
@@ -4218,6 +4264,9 @@ public final class ActivityManagerService extends ActivityManagerNative
             callingUid = task.mCallingUid;
             callingPackage = task.mCallingPackage;
             intent = task.intent;
+            if (task.origActivity != null) {
+                intent.setComponent(task.origActivity);
+            }
             intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
             userId = task.userId;
         }
@@ -5021,6 +5070,9 @@ public final class ActivityManagerService extends ActivityManagerNative
                 return;
             } else if (app.crashing) {
                 Slog.i(TAG, "Crashing app skipping ANR: " + app + " " + annotation);
+                return;
+            } else if (app.killedByAm) {
+                Slog.i(TAG, "App already killed by AM skipping ANR: " + app + " " + annotation);
                 return;
             }
 
@@ -6027,6 +6079,11 @@ public final class ActivityManagerService extends ActivityManagerNative
         return needRestart;
     }
 
+    private final void processContentProviderPublishTimedOutLocked(ProcessRecord app) {
+        cleanupAppInLaunchingProvidersLocked(app, true);
+        removeProcessLocked(app, false, true, "timeout publishing content providers");
+    }
+
     private final void processStartTimedOutLocked(ProcessRecord app) {
         final int pid = app.pid;
         boolean gone = false;
@@ -6053,7 +6110,7 @@ public final class ActivityManagerService extends ActivityManagerNative
                 mBatteryStatsService.removeIsolatedUid(app.uid, app.info.uid);
             }
             // Take care of any launching providers waiting for this process.
-            checkAppInLaunchingProvidersLocked(app, true);
+            cleanupAppInLaunchingProvidersLocked(app, true);
             // Take care of any services that are waiting for the process.
             mServices.processStartTimedOutLocked(app);
             app.kill("start timeout", true);
@@ -6148,6 +6205,12 @@ public final class ActivityManagerService extends ActivityManagerNative
 
         boolean normalMode = mProcessesReady || isAllowedWhileBooting(app.info);
         List<ProviderInfo> providers = normalMode ? generateApplicationProvidersLocked(app) : null;
+
+        if (providers != null && checkAppInLaunchingProvidersLocked(app)) {
+            Message msg = mHandler.obtainMessage(CONTENT_PROVIDER_PUBLISH_TIMEOUT_MSG);
+            msg.obj = app;
+            mHandler.sendMessageDelayed(msg, CONTENT_PROVIDER_PUBLISH_TIMEOUT);
+        }
 
         if (!normalMode) {
             Slog.i(TAG, "Launching preboot mode app: " + app);
@@ -9596,6 +9659,7 @@ public final class ActivityManagerService extends ActivityManagerNative
 
                 checkTime(startTime, "getContentProviderImpl: incProviderCountLocked");
 
+                boolean importantCaller = false;
                 // In this case the provider instance already exists, so we can
                 // return it right away.
                 conn = incProviderCountLocked(r, cpr, token, stable);
@@ -9605,6 +9669,7 @@ public final class ActivityManagerService extends ActivityManagerNative
                         // make sure to count it as being accessed and thus
                         // back up on the LRU list.  This is good because
                         // content providers are often expensive to start.
+                        importantCaller = true;
                         checkTime(startTime, "getContentProviderImpl: before updateLruProcess");
                         updateLruProcessLocked(cpr.proc, false, null);
                         checkTime(startTime, "getContentProviderImpl: after updateLruProcess");
@@ -9982,7 +10047,7 @@ public final class ActivityManagerService extends ActivityManagerNative
             final long origId = Binder.clearCallingIdentity();
 
             final int N = providers.size();
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 ContentProviderHolder src = providers.get(i);
                 if (src == null || src.info == null || src.provider == null) {
                     continue;
@@ -9997,14 +10062,19 @@ public final class ActivityManagerService extends ActivityManagerNative
                         mProviderMap.putProviderByName(names[j], dst);
                     }
 
-                    int NL = mLaunchingProviders.size();
+                    int launchingCount = mLaunchingProviders.size();
                     int j;
-                    for (j=0; j<NL; j++) {
+                    boolean wasInLaunchingProviders = false;
+                    for (j = 0; j < launchingCount; j++) {
                         if (mLaunchingProviders.get(j) == dst) {
                             mLaunchingProviders.remove(j);
+                            wasInLaunchingProviders = true;
                             j--;
-                            NL--;
+                            launchingCount--;
                         }
+                    }
+                    if (wasInLaunchingProviders) {
+                        mHandler.removeMessages(CONTENT_PROVIDER_PUBLISH_TIMEOUT_MSG, r);
                     }
                     synchronized (dst) {
                         dst.provider = src.provider;
@@ -10751,6 +10821,7 @@ public final class ActivityManagerService extends ActivityManagerNative
 
     public void requestBugReport() {
         enforceCallingPermission(android.Manifest.permission.DUMP, "requestBugReport");
+        mContext.sendBroadcast(new Intent("android.intent.action.BUGREPORT_STARTED"));
         SystemProperties.set("ctl.start", "bugreport");
     }
 
@@ -15631,7 +15702,7 @@ public final class ActivityManagerService extends ActivityManagerNative
         app.pubProviders.clear();
 
         // Take care of any launching providers waiting for this process.
-        if (checkAppInLaunchingProvidersLocked(app, false)) {
+        if (cleanupAppInLaunchingProvidersLocked(app, false)) {
             restart = true;
         }
 
@@ -15754,7 +15825,17 @@ public final class ActivityManagerService extends ActivityManagerNative
         return false;
     }
 
-    boolean checkAppInLaunchingProvidersLocked(ProcessRecord app, boolean alwaysBad) {
+    boolean checkAppInLaunchingProvidersLocked(ProcessRecord app) {
+        for (int i = mLaunchingProviders.size() - 1; i >= 0; i--) {
+            ContentProviderRecord cpr = mLaunchingProviders.get(i);
+            if (cpr.launchingApp == app) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean cleanupAppInLaunchingProvidersLocked(ProcessRecord app, boolean alwaysBad) {
         // Look through the content providers we are waiting to have launched,
         // and if any run in this process then either schedule a restart of
         // the process or kill the client waiting for it if this process has

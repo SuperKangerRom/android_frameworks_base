@@ -513,9 +513,9 @@ public class NavigationBarView extends LinearLayout {
 
     private void getIcons(Resources res) {
         mBackIcon = new BackButtonDrawable(res.getDrawable(R.drawable.ic_sysbar_back));
-        mBackLandIcon = new BackButtonDrawable(res.getDrawable(R.drawable.ic_sysbar_back_land));
+        mBackLandIcon = new BackButtonDrawable(res.getDrawable(R.drawable.ic_sysbar_back));
         mRecentIcon = res.getDrawable(R.drawable.ic_sysbar_recent);
-        mRecentLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent_land);
+        mRecentLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent);
     }
 
     @Override
@@ -577,7 +577,7 @@ public class NavigationBarView extends LinearLayout {
                         actionConfig.getClickAction(),
                         actionConfig.getLongpressAction(),
                         actionConfig.getIcon());
-                v.setTag((landscape ? "key_land_" : "key_") + j);
+                v.setTag((landscape ? "key_" : "key_") + j);
 
                 addButton(navButtonLayout, v, landscape);
                 addLightsOutButton(lightsOut, v, landscape, false);
@@ -710,7 +710,7 @@ public class NavigationBarView extends LinearLayout {
         Drawable backLand;
         if (d == null) {
             back = mContext.getResources().getDrawable(R.drawable.ic_sysbar_back);
-            backLand = mContext.getResources().getDrawable(R.drawable.ic_sysbar_back_land);
+            backLand = mContext.getResources().getDrawable(R.drawable.ic_sysbar_back);
         } else {
             back = d;
             backLand = back;
@@ -901,7 +901,7 @@ public class NavigationBarView extends LinearLayout {
 
         if (mButtonsConfig != null && !mButtonsConfig.isEmpty()) {
             for (int j = 0; j < mButtonsConfig.size(); j++) {
-                View v = (View) findViewWithTag((mVertical ? "key_land_" : "key_") + j);
+                View v = (View) findViewWithTag((mVertical ? "key_" : "key_") + j);
                 if (v != null) {
                     int vid = v.getId();
                     if (vid == R.id.back) {

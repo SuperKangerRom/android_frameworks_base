@@ -100,8 +100,33 @@ public class DozeScrimController {
         mHandler.post(mPulseIn);
     }
 
+    /**
+     * Aborts pulsing immediately.
+     */
+    public void abortPulsing() {
+        cancelPulsing();
+        if (mDozing) {
+            mScrimController.setDozeBehindAlpha(1f);
+            mScrimController.setDozeInFrontAlpha(1f);
+        }
+    }
+
+    public void onScreenTurnedOn() {
+//        if (isPulsing()) {
+//            final boolean pickup = mPulseReason == DozeLog.PULSE_REASON_SENSOR_PICKUP;
+//            startScrimAnimation(true /* inFront */, 0f,
+//                    mDozeParameters.getPulseInDuration(pickup),
+//                    pickup ? mPulseInInterpolatorPickup : mPulseInInterpolator,
+//                    mPulseInFinished);
+//        }
+    }
+
     public boolean isPulsing() {
         return mPulseCallback != null;
+    }
+
+    public boolean isDozing() {
+        return mDozing;
     }
 
     private void cancelPulsing() {
