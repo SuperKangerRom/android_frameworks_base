@@ -128,9 +128,9 @@ import com.android.internal.util.vrtoxin.ActionConstants;
 import com.android.internal.util.vrtoxin.ActionHelper;
 import com.android.internal.util.vrtoxin.Blur;
 import com.android.internal.util.vrtoxin.DUPackageMonitor;
-import com.android.internal.util.vrtoxin.EmptyShadeTextHelper;
+import com.android.internal.util.vrtoxin.ExpansionViewTextHelper;
 import com.android.internal.util.vrtoxin.FontHelper;
-import com.android.internal.util.vrtoxin.EmptyShadeColorHelper;
+import com.android.internal.util.vrtoxin.ExpansionViewColorHelper;
 
 import com.android.keyguard.CarrierText;
 import com.android.keyguard.KeyguardHostView.OnDismissAction;
@@ -144,8 +144,10 @@ import com.android.systemui.EventLogTags;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.assist.AssistManager;
+import com.android.systemui.vrtoxin.ExpansionView;
 import com.android.systemui.vrtoxin.UserContentObserver;
 import com.android.systemui.vrtoxin.QuickAccess.QuickAccessBar;
+import com.android.systemui.vrtoxin.WeatherBarContainer;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.doze.ShakeSensorManager;
@@ -423,8 +425,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private boolean mShowTicker;
     private boolean mHeadsUpEnabled;
 
-    // force ShadeView
-    private boolean mForceShadeView;
+    // Expanded Panel
+    private ExpansionView mExpansionView;
+    private WeatherBarContainer mWeatherBarContainer;
+    private boolean mForceExpansionView;
+    private boolean mLayoutChangerButton;
 
     // Tracking finger for opening/closing.
     boolean mTracking;
@@ -684,23 +689,50 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_CUSTOM_HEADER_DEFAULT), 
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_COLOR),
+                    Settings.System.EXPANSION_VIEW_TEXT_COLOR),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_FONT_STYLE),
+                    Settings.System.EXPANSION_VIEW_ICON_COLOR),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_SIZE),
+                    Settings.System.EXPANSION_VIEW_FONT_STYLE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_CUSTOM),
+                    Settings.System.EXPANSION_VIEW_TEXT_SIZE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_IMAGE),
+                    Settings.System.EXPANSION_VIEW_TEXT_CUSTOM),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_FORCE_SHOW),
+                    Settings.System.EXPANSION_VIEW_IMAGE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_FORCE_SHOW),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_RIPPLE_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_SHOW_CURRENT),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_ICON_TYPE),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_ICON_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_TEXT_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_BACKGROUND),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_BACKGROUND_COLOR),
+                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_LAYOUT_CHANGER),
+                    false, this);
             update();
         }
 
@@ -887,23 +919,47 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_NOTIF_COUNT_TEXT_COLOR))) {
                 updateNotifCountTextColor();*/
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_COLOR))) {
-                setEmptyShadeTextColor();
+                    Settings.System.EXPANSION_VIEW_TEXT_COLOR))) {
+                setExpansionViewTextColor();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_FONT_STYLE))) {
-                setEmptyShadeFontStyle();
+                    Settings.System.EXPANSION_VIEW_ICON_COLOR))) {
+                setExpansionViewIconColor();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_SIZE))) {
-                setEmptyShadeTextSize();
+                    Settings.System.EXPANSION_VIEW_FONT_STYLE))) {
+                setExpansionViewFontStyle();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_CUSTOM))) {
-                setEmptyShadeText();
+                    Settings.System.EXPANSION_VIEW_TEXT_SIZE))) {
+                setExpansionViewTextSize();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_IMAGE))) {
-                showEmptyShadeImage();
+                    Settings.System.EXPANSION_VIEW_TEXT_CUSTOM))) {
+                setExpansionViewText();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_EMPTY_SHADE_FORCE_SHOW))) {
-                forceEmptyShadeView();
+                    Settings.System.EXPANSION_VIEW_IMAGE))) {
+                showExpansionViewImage();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_FORCE_SHOW))) {
+                forceExpansionView();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_RIPPLE_COLOR))) {
+                setExpansionViewRipple();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_SHOW_CURRENT))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_ICON_TYPE))) {
+                updateWeatherPanelItems();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_ICON_COLOR))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_WEATHER_TEXT_COLOR))) {
+                setExpansionViewWeatherColors();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_BACKGROUND))
+                || uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_BACKGROUND_COLOR))) {
+                setExpansionViewBg();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.EXPANSION_VIEW_LAYOUT_CHANGER))) {
+                setExpansionViewLayoutChanger();
             }
             update();
         }
@@ -1646,7 +1702,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStackScroller.setSpeedBumpView(speedBump);
         mEmptyShadeView = (EmptyShadeView) LayoutInflater.from(mContext).inflate(
                 R.layout.status_bar_no_notifications, mStackScroller, false);
-        mEmptyShadeView.setUp(this);
         mStackScroller.setEmptyShadeView(mEmptyShadeView);
         mDismissView = (DismissView) LayoutInflater.from(mContext).inflate(
                 R.layout.status_bar_notification_dismiss_all, mStackScroller, false);
@@ -1686,6 +1741,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStatusBarView.setScrimController(mScrimController);
         mDozeScrimController = new DozeScrimController(mScrimController, context);
         mVisualizerView = (VisualizerView) scrimView.findViewById(R.id.visualizerview);
+        mExpansionView = (ExpansionView) mStatusBarWindow.findViewById(R.id.expansion_view);
+        mExpansionView.setUp(this);
 
         mHeader = (StatusBarHeaderView) mStatusBarWindow.findViewById(R.id.header);
         mHeader.setActivityStarter(this);
@@ -1838,6 +1895,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
 
         mWeatherController = new WeatherControllerImpl(mContext);
+
+        // Set up the weather panel
+        mWeatherBarContainer = (WeatherBarContainer) mStatusBarWindow.findViewById(R.id.expansion_view_weather_container);
+        if (mWeatherBarContainer != null) {
+            mWeatherBarContainer.setUp(this, mWeatherController);
+        }
+
         mKeyguardUserSwitcher = new KeyguardUserSwitcher(mContext,
                 (ViewStub) mStatusBarWindow.findViewById(R.id.keyguard_user_switcher),
                 mKeyguardStatusBar, mNotificationPanel, mUserSwitcherController);
@@ -2871,12 +2935,18 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         setCarrierLabelFontStyle();
         updateCarrierLabelSpot();
         updateShowTicker();
-        setEmptyShadeTextColor();
-        setEmptyShadeFontStyle();
-        setEmptyShadeTextSize();
-        setEmptyShadeText();
-        showEmptyShadeImage();
-        forceEmptyShadeView();
+        setExpansionViewTextColor();
+        setExpansionViewIconColor();
+        setExpansionViewFontStyle();
+        setExpansionViewTextSize();
+        setExpansionViewText();
+        showExpansionViewImage();
+        forceExpansionView();
+        updateWeatherPanelItems();
+        setExpansionViewRipple();
+        setExpansionViewBg();
+        setExpansionViewWeatherColors();
+        setExpansionViewLayoutChanger();
     }
 
     private void updateCarrierLabel() {
@@ -3216,140 +3286,184 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }*/
 
-    private void setEmptyShadeTextColor() {
-        int color = EmptyShadeColorHelper.getEmptyShadeTextColor(mContext);
-        if (mEmptyShadeView != null) {
-            mEmptyShadeView.updateTextColor(color);
+    private void setExpansionViewTextColor() {
+        int color = ExpansionViewColorHelper.getExpansionViewTextColor(mContext);
+        if (mExpansionView != null) {
+            mExpansionView.updateTextColor(color);
         }
     }
 
-    private void setEmptyShadeFontStyle() {
-        final int mEmptyShadeFontStyle = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_FONT_STYLE, 0);
-
-        getEmptyShadeFontStyle(mEmptyShadeFontStyle);
+    private void setExpansionViewBg() {
+        if (mExpansionView != null) {
+            mExpansionView.setBackgroundColor();
+        }
     }
 
-    public void getEmptyShadeFontStyle(int font) {
-        if (mEmptyShadeView == null) return;
+
+    private void setExpansionViewIconColor() {
+        int color = ExpansionViewColorHelper.getExpansionViewIconColor(mContext);
+        if (mExpansionView != null) {
+            mExpansionView.updateIconColor(color);
+        }
+    }
+
+    private void setExpansionViewWeatherColors() {
+        if (mWeatherBarContainer != null) {
+            mWeatherBarContainer.updateItems();
+        }
+    }
+
+    private void setExpansionViewFontStyle() {
+        final int mExpansionViewFontStyle = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_FONT_STYLE, 0);
+
+        getExpansionViewFontStyle(mExpansionViewFontStyle);
+    }
+
+    public void getExpansionViewFontStyle(int font) {
+        if (mExpansionView == null) return;
         switch (font) {
             case FontHelper.FONT_NORMAL:
             default:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_BOLD:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+                mExpansionView.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
                 break;
             case FontHelper.FONT_BOLD_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif", Typeface.BOLD_ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif", Typeface.BOLD_ITALIC));
                 break;
             case FontHelper.FONT_LIGHT:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_LIGHT_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-light", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-light", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_THIN:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_THIN_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-thin", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-thin", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_CONDENSED:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_CONDENSED_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_CONDENSED_LIGHT:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed-light", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed-light", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_CONDENSED_LIGHT_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed-light", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed-light", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_CONDENSED_BOLD:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
                 break;
             case FontHelper.FONT_CONDENSED_BOLD_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD_ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD_ITALIC));
                 break;
             case FontHelper.FONT_MEDIUM:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_MEDIUM_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-medium", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-medium", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_BLACK:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_BLACK_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("sans-serif-black", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("sans-serif-black", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_DANCINGSCRIPT:
-                mEmptyShadeView.setTypeface(Typeface.create("cursive", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("cursive", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_DANCINGSCRIPT_BOLD:
-                mEmptyShadeView.setTypeface(Typeface.create("cursive", Typeface.BOLD));
+                mExpansionView.setTypeface(Typeface.create("cursive", Typeface.BOLD));
                 break;
             case FontHelper.FONT_COMINGSOON:
-                mEmptyShadeView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_NOTOSERIF:
-                mEmptyShadeView.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+                mExpansionView.setTypeface(Typeface.create("serif", Typeface.NORMAL));
                 break;
             case FontHelper.FONT_NOTOSERIF_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("serif", Typeface.ITALIC));
+                mExpansionView.setTypeface(Typeface.create("serif", Typeface.ITALIC));
                 break;
             case FontHelper.FONT_NOTOSERIF_BOLD:
-                mEmptyShadeView.setTypeface(Typeface.create("serif", Typeface.BOLD));
+                mExpansionView.setTypeface(Typeface.create("serif", Typeface.BOLD));
                 break;
             case FontHelper.FONT_NOTOSERIF_BOLD_ITALIC:
-                mEmptyShadeView.setTypeface(Typeface.create("serif", Typeface.BOLD_ITALIC));
+                mExpansionView.setTypeface(Typeface.create("serif", Typeface.BOLD_ITALIC));
                 break;
         }
     }
 
-    private void setEmptyShadeText() {
-        String emptyShadeText = Settings.System.getString(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_CUSTOM);
+    private void setExpansionViewText() {
+        String expansionViewText = Settings.System.getString(mContext.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_TEXT_CUSTOM);
 
-        if (emptyShadeText == null || emptyShadeText.isEmpty()) {
-            emptyShadeText = EmptyShadeTextHelper.getDefaultEmptyShadeText(mContext);
+        if (expansionViewText == null || expansionViewText.isEmpty()) {
+            expansionViewText = ExpansionViewTextHelper.getDefaultExpansionViewText(mContext);
         }
-        if (mEmptyShadeView != null) {
-            mEmptyShadeView.setCustomText(emptyShadeText);
-        }
-    }
-
-    private void setEmptyShadeTextSize() {
-        int mEmptyShadeFontSize = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_SIZE, 14);
-
-        if (mEmptyShadeView != null) {
-            mEmptyShadeView.setTextSize(mEmptyShadeFontSize);
+        if (mExpansionView != null) {
+            mExpansionView.setCustomText(expansionViewText);
         }
     }
 
-    private void showEmptyShadeImage() {
+    private void setExpansionViewTextSize() {
+        int mExpansionViewFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_TEXT_SIZE, 14);
+
+        if (mExpansionView != null) {
+            mExpansionView.setTextSize(mExpansionViewFontSize);
+        }
+    }
+
+    private void showExpansionViewImage() {
         final boolean show = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_IMAGE, 0) == 1;
+                Settings.System.EXPANSION_VIEW_IMAGE, 0) == 1;
 
-        if (mEmptyShadeView != null) {
-            mEmptyShadeView.showRomLogo(show);
+        if (mExpansionView != null) {
+            mExpansionView.showRomLogo(show);
         }
     }
 
-    private void forceEmptyShadeView() {
+    private void setExpansionViewLayoutChanger() {
+        final boolean showChanger = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_LAYOUT_CHANGER, 1) == 1;
 
-        mForceShadeView = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_FORCE_SHOW, 0) == 1;
+        if (mExpansionView != null) {
+            mExpansionView.showLayoutChanger(showChanger);
+        }
+    }
+
+    private void forceExpansionView() {
+
+        mForceExpansionView = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_FORCE_SHOW, 0) == 1;
         if (mStackScroller != null) {
-            mStackScroller.forceShowShade(mForceShadeView);
+            mStackScroller.forceShowShade(mForceExpansionView);
         }
     }
+
+    private void updateWeatherPanelItems() {
+        if (mWeatherBarContainer != null) {
+            mWeatherBarContainer.updateItems();
+        }
+    }
+
+    private void setExpansionViewRipple() {
+        if (mWeatherBarContainer != null) {
+            mWeatherBarContainer.setRippleColor();
+        }
+        if (mExpansionView != null) {
+            mExpansionView.setRippleColor();
+        }
+     }
 
     private int adjustDisableFlags(int state) {
         if (!mLaunchTransitionFadingAway && !mKeyguardFadingAway

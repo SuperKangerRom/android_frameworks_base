@@ -81,4 +81,7 @@
     <!-- The default color for the clear recents button icon on light background  -->
     <color name="fab_icon_dark_color">#8a000000</color>
 
+    <!-- Expansion View Background Color (default)-->
+    <color name="expansion_view_bg_color">#ffffffff</color>
+
 </resources>

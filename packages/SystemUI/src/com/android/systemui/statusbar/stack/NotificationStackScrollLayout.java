@@ -2783,7 +2783,7 @@ public class NotificationStackScrollLayout extends ViewGroup
                     }
                 } else if (child == mEmptyShadeView) {
                     // We arrived at the empty shade view, for which we accept all clicks
-                    return true;
+                    return false;
                 } else if (!belowChild){
                     // We are on a child
                     return false;

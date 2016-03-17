@@ -251,7 +251,7 @@
     <string name="app_ops_su">get Superuser access</string>
 
     <!-- Empty Shade Text -->
-    <string name="default_empty_shade_text">Nothing To See Here</string>
+    <string name="default_empty_shade_text">Longpress Me!!!</string>
 
     <string name="global_action_torch">Torch</string>
 

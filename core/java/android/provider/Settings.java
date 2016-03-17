@@ -5506,12 +5506,6 @@ public final class Settings {
         public static final String STATUS_BAR_EXPANDED_HEADER_BG_COLOR = "status_bar_expanded_header_bg_color";
 
         /**
-         * Color of the battery icon on the header of the expanded status bar
-         * @hide
-         */
-        public static final String STATUS_BAR_EXPANDED_HEADER_BATTERY_COLOR = "status_bar_expanded_header_battery_color";
-
-        /**
          * Color of the ripple effects on the header of the expanded status bar
          * @hide
          */
@@ -5534,6 +5528,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_EXPANDED_HEADER_ALARM_COLOR = "status_bar_expanded_header_alarm_color";
+
+        /**
+         * Color of the expanded status bar header alarm
+         * @hide
+         */
+        public static final String STATUS_BAR_EXPANDED_HEADER_BATTERY_COLOR = "status_bar_expanded_header_battery_color";
 
         /**
          * Color of the clock on the header of the expanded status bar
@@ -6638,40 +6638,103 @@ public final class Settings {
         public static final String SETTINGS_CATEGORY_TEXT_SIZE = "settings_category_text_size";
 
         /**
-         * Empty Shade Text Color
+         * Expansion View Text Color
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_TEXT_COLOR = "status_bar_empty_shade_text_color";
+        public static final String EXPANSION_VIEW_TEXT_COLOR = "expansion_view_text_color";
+
+        /**
+         * Expansion View Icon Color
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_ICON_COLOR = "expansion_view_icon_color";
+
+        /**
+         * Expansion View Ripple Color
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_RIPPLE_COLOR = "expansion_view_ripple_color";
 
         /**
          * Empty Shade Text Font Style
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_FONT_STYLE = "status_bar_empty_shade_font_style";
+        public static final String EXPANSION_VIEW_FONT_STYLE = "expansion_view_font_style";
 
         /**
          * Size of the Empty Shade Text
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_TEXT_SIZE = "status_bar_empty_shade_text_size";
+        public static final String EXPANSION_VIEW_TEXT_SIZE = "expansion_view_text_size";
 
         /**
          * Empty Shade Custom Text
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_TEXT_CUSTOM = "status_bar_empty_shade_text_custom";
+        public static final String EXPANSION_VIEW_TEXT_CUSTOM = "expansion_view_text_custom";
 
         /**
          * Empty Shade Image
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_IMAGE = "status_bar_empty_shade_image";
+        public static final String EXPANSION_VIEW_IMAGE = "expansion_view_image";
 
         /**
-         * Empty Shade Force View
+         * Expansion View Forced On
          * @hide
          */
-        public static final String STATUS_BAR_EMPTY_SHADE_FORCE_SHOW = "status_bar_empty_shade_force_show";
+        public static final String EXPANSION_VIEW_FORCE_SHOW = "expansion_view_force_show";
+
+        /**
+         * Whether to show current weather info in the expansion view weather panel
+         *
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_WEATHER_SHOW_CURRENT = "expansion_view_weather_show_current";
+
+        /**
+         * Type of the weather icon in the Expansion View
+         * 0 - Monochrome
+         * 1 - Colored
+         * 2 - VClouds
+         * default: 0
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_WEATHER_ICON_TYPE = "expansion_view_weather_icon_type";
+
+        /**
+         * Icon color for the expansion view weather panel
+         *
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_WEATHER_ICON_COLOR = "expansion_view_weather_icon_color";
+
+        /**
+         * Text color for the expansion view weather panel
+         *
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_WEATHER_TEXT_COLOR = "expansion_view_weather_text_color";
+
+        /**
+         * Icon color for the expansion view weather panel
+         *
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_BACKGROUND = "expansion_view_background";
+
+        /**
+         * Text color for the expansion view weather panel
+         *
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_BACKGROUND_COLOR = "expansion_view_background_color";
+
+        /**
+         * Expansion View Layout Changer
+         * @hide
+         */
+        public static final String EXPANSION_VIEW_LAYOUT_CHANGER = "expansion_view_layout_changer";
 
         /**
          * Custom shortcuts for the empty shade view

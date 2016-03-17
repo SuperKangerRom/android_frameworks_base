@@ -121,4 +121,10 @@
     <dimen name="shortcut_seperater_width">8dp</dimen>
     <dimen name="shortcut_margin_top">25dp</dimen>
 
+    <!-- Start and end margin of the weather bar -->
+    <dimen name="weather_panel_margin_start_end">16dp</dimen>
+
+    <!-- Top and bottom padding of the weather bar -->
+    <dimen name="weather_bar_padding_top_bottom">8dp</dimen>
+
 </resources>

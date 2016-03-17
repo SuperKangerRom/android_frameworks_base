@@ -23,7 +23,7 @@ import android.provider.Settings;
 
 import com.android.internal.util.NotificationColorUtil;
 
-public class EmptyShadeColorHelper {
+public class ExpansionViewColorHelper {
 
     private static int WHITE = 0xffffffff;
     private static int VRTOXIN_BLUE = 0xff1976D2;
@@ -98,9 +98,37 @@ public class EmptyShadeColorHelper {
                 Settings.System.PANEL_SHORTCUTS_RIPPLE_COLOR, WHITE);
     }
 
-    public static int getEmptyShadeTextColor(Context context) {
+    public static int getExpansionViewTextColor(Context context) {
         return Settings.System.getInt(context.getContentResolver(),
-                Settings.System.STATUS_BAR_EMPTY_SHADE_TEXT_COLOR,
-                VRTOXIN_BLUE);
+                Settings.System.EXPANSION_VIEW_TEXT_COLOR,
+                WHITE);
+    }
+
+    public static int getExpansionViewIconColor(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_ICON_COLOR,
+                WHITE);
+    }
+
+    public static int getWeatherIconColor(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_WEATHER_ICON_COLOR,
+                WHITE);
+    }
+
+    public static int getWeatherTextColor(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_WEATHER_TEXT_COLOR,
+                WHITE);
+    }
+
+    public static int getBackgroundColor(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_BACKGROUND_COLOR, WHITE);
+    }
+
+    public static int getNormalRippleColor(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.EXPANSION_VIEW_RIPPLE_COLOR, WHITE);
     }
 }

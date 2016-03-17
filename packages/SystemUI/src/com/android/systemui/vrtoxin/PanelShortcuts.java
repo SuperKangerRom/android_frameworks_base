@@ -39,7 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.internal.util.vrtoxin.ImageHelper;
-import com.android.internal.util.vrtoxin.EmptyShadeColorHelper;
+import com.android.internal.util.vrtoxin.ExpansionViewColorHelper;
 import com.android.internal.util.vrtoxin.AppHelper;
 import com.android.internal.util.vrtoxin.ActionHelper;
 import com.android.internal.util.vrtoxin.ActionConfig;
@@ -166,11 +166,11 @@ public class PanelShortcuts extends LinearLayout {
     }
 
     private void setIconColor(ImageView iv, Drawable d) {
-        final int iconColor = EmptyShadeColorHelper.getIconColor(mContext, d);
+        final int iconColor = ExpansionViewColorHelper.getIconColor(mContext, d);
 
         iv.setColorFilter(null);
-        if (EmptyShadeColorHelper.getIconColorMode(mContext) == 2
-                && !EmptyShadeColorHelper.isGrayscaleIcon(mContext, d)) {
+        if (ExpansionViewColorHelper.getIconColorMode(mContext) == 2
+                && !ExpansionViewColorHelper.isGrayscaleIcon(mContext, d)) {
             iv.setImageBitmap(ImageHelper.getColoredBitmap(d, iconColor));
         } else {
             iv.setImageBitmap(ImageHelper.drawableToBitmap(d));
@@ -182,7 +182,7 @@ public class PanelShortcuts extends LinearLayout {
 
     private void setRippleColor(ImageView iv, Drawable d) {
         RippleDrawable rd = (RippleDrawable) mContext.getDrawable(R.drawable.buttons_bar_ripple_drawable);
-        final int rippleColor = EmptyShadeColorHelper.getRippleColor(mContext, d);
+        final int rippleColor = ExpansionViewColorHelper.getRippleColor(mContext, d);
 
         if (rippleColor == 0) {
             iv.setColorFilter(rippleColor, Mode.MULTIPLY);

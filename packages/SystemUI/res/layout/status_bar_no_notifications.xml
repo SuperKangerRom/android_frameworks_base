@@ -1,5 +1,6 @@
 <!--
   ~ Copyright (C) 2014 The Android Open Source Project
+  ~ Copyright (C) 2016 Brett Rogers (rogersb11)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -23,34 +24,49 @@
         android:visibility="gone"
         >
 
-    <TextView
-            android:id="@+id/no_notifications"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="15dp"/>
+    <com.android.systemui.vrtoxin.ExpansionView
+        android:id="@+id/expansion_view"
+        android:layout_height="220dp"
+        android:layout_width="match_parent"
+        android:background="@drawable/expansion_view_bg"
+        android:layout_gravity="bottom">
 
-    <ImageView
-            android:id="@+id/empty_shade_rom_logo"
+            <include layout="@layout/expansion_view_shortcut_panel" />
+            <com.android.systemui.vrtoxin.WeatherBarContainer
+            android:id="@+id/expansion_view_weather_container"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="#00000000"
-            android:src="@drawable/no_recent_apps_logo"
-            android:visibility="gone" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center" >
 
-    <include layout="@layout/panel_shortcuts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="18dp"/>
+        <TextView
+                android:id="@+id/expansion_view_weather_no_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/weather_bar_padding_top_bottom"
+                android:paddingBottom="@dimen/weather_bar_padding_top_bottom"
+                android:text="@string/weather_info_not_available"
+                android:textSize="16sp"
+                android:textColor="#ffffffff" />
 
-    <!--<TextView
-            android:id="@+id/empty_shade_rom_text"
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:paddingTop="12dp"
-            android:gravity="bottom|center_horizontal"
-            android:textColor="#ffffff"/>-->
+        <LinearLayout
+                android:id="@+id/expansion_view_weather"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/weather_panel_margin_start_end"
+                android:layout_marginEnd="@dimen/weather_panel_margin_start_end"
+                android:paddingTop="@dimen/weather_bar_padding_top_bottom"
+                android:paddingBottom="@dimen/weather_bar_padding_top_bottom"
+                android:gravity="center_vertical" />
+
+    </com.android.systemui.vrtoxin.WeatherBarContainer>
+
+            <ImageView
+                android:id="@+id/expansion_view_layout_changer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:src="@drawable/ic_layout_changer" />
+
+    </com.android.systemui.vrtoxin.ExpansionView>
 </com.android.systemui.statusbar.EmptyShadeView>

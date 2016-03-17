@@ -18,15 +18,15 @@ package com.android.internal.util.vrtoxin;
 
 import android.content.Context;
 
-public class EmptyShadeTextHelper {
+public class ExpansionViewTextHelper {
 
-    public static String getDefaultEmptyShadeText(Context context) {
+    public static String getDefaultExpansionViewText(Context context) {
 
-        final String emptyShadeText = context.getResources().getString(
+        final String expansionViewText = context.getResources().getString(
                 com.android.internal.R.string.default_empty_shade_text);
 
-        String defaultEmptyShadeText = emptyShadeText;
+        String defaultExpansionViewText = expansionViewText;
 
-        return defaultEmptyShadeText;
+        return defaultExpansionViewText;
     }
 }

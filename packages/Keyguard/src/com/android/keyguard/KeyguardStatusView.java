@@ -44,7 +44,7 @@ import android.widget.TextView;
 
 import com.android.internal.util.vrtoxin.FontHelper;
 import com.android.internal.util.vrtoxin.WeatherController;
-import com.android.internal.util.vrtoxin.WeatherControllerImpl;
+import com.android.internal.util.vrtoxin.WeatherControllerLSImpl;
 import com.android.internal.util.vrtoxin.ImageHelper;
 import com.android.internal.widget.LockPatternUtils;
 
@@ -167,7 +167,7 @@ public class KeyguardStatusView extends GridLayout implements
         super(context, attrs, defStyle);
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mLockPatternUtils = new LockPatternUtils(getContext());
-        mWeatherController = new WeatherControllerImpl(mContext);
+        mWeatherController = new WeatherControllerLSImpl(mContext);
         updateClockColor();
         updateClockDateColor();
         updateOwnerInfoColor();

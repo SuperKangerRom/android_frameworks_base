@@ -1,8 +1,6 @@
 /*
  * Copyright (C) 2015 The CyanogenMod Project
  *
- * Copyright (C) 2015 DarkKat
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,11 +26,12 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-public class WeatherControllerImpl implements WeatherController {
+public class WeatherControllerLSImpl implements WeatherController {
 
     private static final String TAG = WeatherController.class.getSimpleName();
     private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
@@ -45,26 +44,17 @@ public class WeatherControllerImpl implements WeatherController {
     public static final String ACTION_FORCE_WEATHER_UPDATE
             = "com.cyanogenmod.lockclock.action.FORCE_WEATHER_UPDATE";
     public static final Uri CURRENT_WEATHER_URI
-            = Uri.parse("content://com.cyanogenmod.lockclock.weather.provider/weather");
+            = Uri.parse("content://com.cyanogenmod.lockclock.weather.provider/weather/current");
     public static final String[] WEATHER_PROJECTION = new String[]{
             "city",
-            "wind",
-            "condition_code",
-            "temperature",
-            "humidity",
             "condition",
-            "time_stamp",
-            "forecast_low",
-            "forecast_high",
-            "forecast_condition",
-            "forecast_condition_code"
-
+            "condition_code",
+            "temperature"
     };
     public static final String LOCK_CLOCK_PACKAGE_NAME = "com.cyanogenmod.lockclock";
 
     private static final int WEATHER_ICON_MONOCHROME = 0;
-    private static final int WEATHER_ICON_COLORED    = 1;
-    private static final int WEATHER_ICON_VCLOUDS    = 2;
+    private static final int WEATHER_ICON_COLORED = 1;
 
     private final ArrayList<Callback> mCallbacks = new ArrayList<Callback>();
     private final Receiver mReceiver = new Receiver();
@@ -72,7 +62,7 @@ public class WeatherControllerImpl implements WeatherController {
 
     private WeatherInfo mCachedInfo = new WeatherInfo();
 
-    public WeatherControllerImpl(Context context) {
+    public WeatherControllerLSImpl(Context context) {
         mContext = context;
                 mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         queryWeather();
@@ -95,10 +85,8 @@ public class WeatherControllerImpl implements WeatherController {
     }
 
     private Drawable getIcon(int conditionCode) {
-        return getIcon(conditionCode, 0 /* Monochrome icon */);
-    }
-
-    private Drawable getIcon(int conditionCode, int iconNameValue) {
+        int iconNameValue = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.LOCK_SCREEN_WEATHER_CONDITION_ICON, 0);
         String iconName;
 
         if (iconNameValue == WEATHER_ICON_MONOCHROME) {
@@ -108,7 +96,6 @@ public class WeatherControllerImpl implements WeatherController {
         } else {
             iconName = "weather_vclouds_";
         }
-
         try {
             Resources resources =
                     mContext.createPackageContext(LOCK_CLOCK_PACKAGE_NAME, 0).getResources();
@@ -134,45 +121,10 @@ public class WeatherControllerImpl implements WeatherController {
             try {
                 c.moveToFirst();
                 mCachedInfo.city = c.getString(0);
-                mCachedInfo.wind = c.getString(1);
+                mCachedInfo.condition = c.getString(1);
                 mCachedInfo.conditionCode = c.getInt(2);
                 mCachedInfo.conditionDrawable = getIcon(mCachedInfo.conditionCode);
-                mCachedInfo.conditionDrawableMonochrome =
-                        getIcon(mCachedInfo.conditionCode, WEATHER_ICON_MONOCHROME);
-                mCachedInfo.conditionDrawableColored =
-                        getIcon(mCachedInfo.conditionCode, WEATHER_ICON_COLORED);
-                mCachedInfo.conditionDrawableVClouds =
-                        getIcon(mCachedInfo.conditionCode, WEATHER_ICON_VCLOUDS);
                 mCachedInfo.temp = c.getString(3);
-                mCachedInfo.humidity = c.getString(4);
-                mCachedInfo.condition = c.getString(5);
-                mCachedInfo.timeStamp = c.getString(6);
-                c.moveToNext();
-                mCachedInfo.forecasts.clear();
-                DayForecast day1 = new DayForecast(c.getString(7), c.getString(8), c.getString(9), c.getInt(10),
-                        getIcon(c.getInt(10)), getIcon(c.getInt(10), WEATHER_ICON_MONOCHROME),
-                        getIcon(c.getInt(10), WEATHER_ICON_COLORED), getIcon(c.getInt(10), WEATHER_ICON_VCLOUDS));
-                mCachedInfo.forecasts.add(day1);
-                c.moveToNext();
-                DayForecast day2 = new DayForecast(c.getString(7), c.getString(8), c.getString(9), c.getInt(10),
-                        getIcon(c.getInt(10)), getIcon(c.getInt(10), WEATHER_ICON_MONOCHROME),
-                        getIcon(c.getInt(10), WEATHER_ICON_COLORED), getIcon(c.getInt(10), WEATHER_ICON_VCLOUDS));
-                mCachedInfo.forecasts.add(day2);
-                c.moveToNext();
-                DayForecast day3 = new DayForecast(c.getString(7), c.getString(8), c.getString(9), c.getInt(10),
-                        getIcon(c.getInt(10)), getIcon(c.getInt(10), WEATHER_ICON_MONOCHROME),
-                        getIcon(c.getInt(10), WEATHER_ICON_COLORED), getIcon(c.getInt(10), WEATHER_ICON_VCLOUDS));
-                mCachedInfo.forecasts.add(day3);
-                c.moveToNext();
-                DayForecast day4 = new DayForecast(c.getString(7), c.getString(8), c.getString(9), c.getInt(10),
-                        getIcon(c.getInt(10)), getIcon(c.getInt(10), WEATHER_ICON_MONOCHROME),
-                        getIcon(c.getInt(10), WEATHER_ICON_COLORED), getIcon(c.getInt(10), WEATHER_ICON_VCLOUDS));
-                mCachedInfo.forecasts.add(day4);
-                c.moveToNext();
-                DayForecast day5 = new DayForecast(c.getString(7), c.getString(8), c.getString(9), c.getInt(10),
-                        getIcon(c.getInt(10)), getIcon(c.getInt(10), WEATHER_ICON_MONOCHROME),
-                        getIcon(c.getInt(10), WEATHER_ICON_COLORED), getIcon(c.getInt(10), WEATHER_ICON_VCLOUDS));
-                mCachedInfo.forecasts.add(day5);
             } finally {
                 c.close();
             }
@@ -205,4 +157,5 @@ public class WeatherControllerImpl implements WeatherController {
         queryWeather();
         fireCallback();
     }
+
 }
